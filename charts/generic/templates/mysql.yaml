@@ -1,0 +1,12 @@
+{{- if .Values.mysql.enabled -}}
+apiVersion: mysql.oracle.com/v2
+kind: InnoDBCluster
+metadata:
+  name: "{{ .Values.name }}-mysql"
+spec:
+  secretName: "{{ .Values.name }}-mysql-root"
+  tlsUseSelfSigned: true
+  instances: {{ .Values.mysql.instances }}
+  router:
+    instances: {{ .Values.mysql.routerInstances }}
+{{- end }}
