@@ -34,9 +34,9 @@ spec:
           image: ghcr.io/cmmarslender/mysql-init
           envFrom:
             - secretRef:
-                name: "{{ .Values.name }}-mysql-root"
+                name: {{ include "generic.fullname" . }}-mysql-root
             - secretRef:
-                name: "{{ .Values.name }}-mysql-user"
+                name: {{ include "generic.fullname" . }}-mysql-user
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -63,7 +63,7 @@ spec:
                 name: "{{ .Release.Name }}-env"
             {{- if .Values.mysql.enabled }}
             - secretRef:
-                name: "{{ .Values.name }}-mysql-user"
+                name: {{ include "generic.fullname" . }}-mysql-user
                 optional: false
             {{- end }}
           volumeMounts:

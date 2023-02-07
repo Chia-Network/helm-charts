@@ -2,9 +2,9 @@
 apiVersion: mysql.oracle.com/v2
 kind: InnoDBCluster
 metadata:
-  name: "{{ .Values.name }}-mysql"
+  name: {{ include "generic.fullname" . }}-mysql
 spec:
-  secretName: "{{ .Values.name }}-mysql-root"
+  secretName: {{ include "generic.fullname" . }}-mysql-root
   tlsUseSelfSigned: true
   instances: {{ .Values.mysql.instances }}
   router:
