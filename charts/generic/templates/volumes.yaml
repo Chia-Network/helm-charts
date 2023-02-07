@@ -1,0 +1,15 @@
+{{- $fullName := include "generic.fullname" . -}}
+{{- range .Values.volumes }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ $fullName }}-{{ .name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .size }}
+  storageClassName: {{ .storageClassName }}
+{{- end }}
