@@ -48,6 +48,13 @@ spec:
             - name: http
               containerPort: {{ .Values.deployment.containerPort }}
               protocol: TCP
+          {{- with .Values.deployment.environment }}
+          env:
+            {{- range $key, $value := . }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          {{- end }}
           envFrom:
             - secretRef:
                 name: "{{ .Release.Name }}-env"
