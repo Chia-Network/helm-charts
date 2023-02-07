@@ -1,3 +1,4 @@
+{{- $fullName := include "generic.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -63,6 +64,11 @@ spec:
               mountPath: {{ .Values.secretFile.mountPath }}
             - name: configmap-file
               mountPath: {{ .Values.configmapFile.mountPath }}
+            {{- range .Values.volumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
           {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -80,6 +86,11 @@ spec:
         - name: configmap-file
           configMap:
             name: "{{ .Release.Name }}-file"
+        {{- range .Values.volumes }}
+        - name: {{ .name }}
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}-{{ .name }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
