@@ -37,6 +37,9 @@ securityContext: {}
 
 deployment:
   containerPort: 80
+  # Environment variables to add directly to the deployment configuration (as opposed to via the secret or configmap)
+  environment: {}
+  #  MY_KEY: "My Value"
   livenessProbe: {}
 #    httpGet:
 #      path: /
