@@ -76,7 +76,7 @@ ingress:
 # Creates a MySQL DB cluster and database with the following settings (utilizes MySQL-Operator)
 mysql:
   enabled: false
-  name: "my-db"
+  dbName: "my-db"
   instances: 3
   routerInstances: 1
   rootUser:
