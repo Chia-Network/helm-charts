@@ -52,6 +52,9 @@ deployment:
 service:
   enabled: false
   type: ClusterIP
+  additionalLabels: {}
+    # application: my-application
+    # prometheus: application-metrics
   port: 80
 
 ingress:
