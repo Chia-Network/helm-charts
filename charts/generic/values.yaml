@@ -25,6 +25,7 @@ sidecars: []
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
+shortnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created

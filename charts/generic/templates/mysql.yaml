@@ -2,7 +2,7 @@
 apiVersion: mysql.oracle.com/v2
 kind: InnoDBCluster
 metadata:
-  name: {{ include "generic.fullname" . }}-mysql
+  name: {{ include "generic.shortname" . }}-mysql
 spec:
   secretName: {{ include "generic.fullname" . }}-mysql-root
   tlsUseSelfSigned: true
