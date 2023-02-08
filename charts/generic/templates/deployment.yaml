@@ -86,6 +86,46 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        {{- range .Values.sidecars }}
+        {{- $sidecarName := .name -}}
+        - name: {{ $sidecarName }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ .image.repository }}:{{ .image.tag }}"
+          imagePullPolicy: {{ .image.pullPolicy }}
+          {{- with .environment }}
+          env:
+            {{- range $key, $value := . }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          {{- end }}
+          envFrom:
+            - secretRef:
+                name: "{{ $.Release.Name }}-env"
+                optional: false
+            - configMapRef:
+                name: "{{ $.Release.Name }}-env"
+            {{- if $.Values.mysql.enabled }}
+            - secretRef:
+                name: {{ include "generic.fullname" . }}-mysql-user
+                optional: false
+            {{- end }}
+          volumeMounts:
+            - name: secret-file
+              mountPath: {{ $.Values.secretFile.mountPath }}
+            - name: configmap-file
+              mountPath: {{ $.Values.configmapFile.mountPath }}
+            {{- range $.Values.volumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
+            {{- range .emptyDirs }}
+            - name: {{ $sidecarName }}-{{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
+        {{- end }}
       volumes:
         - name: secret-file
           secret:
@@ -97,6 +137,13 @@ spec:
         - name: {{ .name }}
           persistentVolumeClaim:
             claimName: {{ $fullName }}-{{ .name }}
+        {{- end }}
+        {{- range .Values.sidecars }}
+        {{- $sidecarName := .name -}}
+        {{- range .emptyDirs }}
+        - name: {{ $sidecarName }}-{{ .name }}
+          emptyDir: {}
+        {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

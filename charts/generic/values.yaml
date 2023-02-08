@@ -4,10 +4,23 @@
 
 replicaCount: 1
 
+# This is considered the primary container in the deployment
+# Ingress/Service will point here
 image:
   repository: nginx
   pullPolicy: IfNotPresent
   tag: latest
+
+sidecars: []
+#  - name: example-sidecar
+#    image:
+#      repository: nginx
+#      pullPolicy: IfNotPresent
+#      tag: latest
+#    environment: {}
+#    emptyDirs:
+#      - name: example-shared
+#        mountPath: /var/shared
 
 imagePullSecrets: []
 nameOverride: ""
