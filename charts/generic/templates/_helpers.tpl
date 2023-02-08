@@ -24,6 +24,18 @@ If release name contains chart name it will be used as a full name.
 {{- end }}
 
 {{/*
+Create a shorter version of fullname, without the chart name present
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "generic.shortname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.shortnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s" .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "generic.chart" -}}

@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "generic.fullname" . }}
+  name: {{ $fullName }}
   labels:
     {{- include "generic.labels" . | nindent 4 }}
 spec:
@@ -34,9 +34,9 @@ spec:
           image: ghcr.io/cmmarslender/mysql-init
           envFrom:
             - secretRef:
-                name: {{ include "generic.fullname" . }}-mysql-root
+                name: {{ $fullName }}-mysql-root
             - secretRef:
-                name: {{ include "generic.fullname" . }}-mysql-user
+                name: {{ $fullName }}-mysql-user
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -63,7 +63,7 @@ spec:
                 name: "{{ .Release.Name }}-env"
             {{- if .Values.mysql.enabled }}
             - secretRef:
-                name: {{ include "generic.fullname" . }}-mysql-user
+                name: {{ $fullName }}-mysql-user
                 optional: false
             {{- end }}
           volumeMounts:
@@ -76,6 +76,13 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
+            {{- range .Values.sidecars }}
+            {{- $sidecarName := .name -}}
+            {{- range .sharedEmptyDirs }}
+            - name: {{ $sidecarName }}-{{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -86,6 +93,46 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        {{- range .Values.sidecars -}}
+        {{- $sidecarName := .name }}
+        - name: {{ $sidecarName }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ .image.repository }}:{{ .image.tag }}"
+          imagePullPolicy: {{ .image.pullPolicy }}
+          {{- with .environment }}
+          env:
+            {{- range $key, $value := . }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          {{- end }}
+          envFrom:
+            - secretRef:
+                name: "{{ $.Release.Name }}-env"
+                optional: false
+            - configMapRef:
+                name: "{{ $.Release.Name }}-env"
+            {{- if $.Values.mysql.enabled }}
+            - secretRef:
+                name: {{ $fullName }}-mysql-user
+                optional: false
+            {{- end }}
+          volumeMounts:
+            - name: secret-file
+              mountPath: {{ $.Values.secretFile.mountPath }}
+            - name: configmap-file
+              mountPath: {{ $.Values.configmapFile.mountPath }}
+            {{- range $.Values.volumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
+            {{- range .sharedEmptyDirs }}
+            - name: {{ $sidecarName }}-{{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
+        {{- end }}
       volumes:
         - name: secret-file
           secret:
@@ -97,6 +144,13 @@ spec:
         - name: {{ .name }}
           persistentVolumeClaim:
             claimName: {{ $fullName }}-{{ .name }}
+        {{- end }}
+        {{- range .Values.sidecars }}
+        {{- $sidecarName := .name -}}
+        {{- range .sharedEmptyDirs }}
+        - name: {{ $sidecarName }}-{{ .name }}
+          emptyDir: {}
+        {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
