@@ -18,7 +18,7 @@ sidecars: []
 #      pullPolicy: IfNotPresent
 #      tag: latest
 #    environment: {}
-#    emptyDirs:
+#    sharedEmptyDirs:
 #      - name: example-shared
 #        mountPath: /var/shared
 
