@@ -91,12 +91,13 @@ mysql:
   instances: 3
   routerInstances: 1
   rootUser:
-    secret-name: db-root-creds
     user: "root"
     password: "password"
   standardUser:
-    secret-name: db-user-creds
     user: "db-user"
+    password: "password"
+  readOnlyUser:
+    user: "read-only-db-user"
     password: "password"
 
 # Creates a secret with the following values, and mounts as env into the main deployment container
