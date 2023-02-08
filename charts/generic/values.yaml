@@ -68,10 +68,7 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tlsEnabled: true
 
 # Creates a MySQL DB cluster and database with the following settings (utilizes MySQL-Operator)
 mysql:
