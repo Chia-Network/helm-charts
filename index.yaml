@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   generic:
   - apiVersion: v2
+    created: "2023-02-08T05:22:47.120557238Z"
+    description: A generic helm chart that handles a bunch of common application deploy
+      cases
+    digest: 4a589f7ec3c01af3cc31dc4d349a2a6e3a8fae55e5fd6885ebeea6eb02e000ab
+    name: generic
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/generic-0.5.0/generic-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
     created: "2023-02-07T19:22:15.361597517Z"
     description: A generic helm chart that handles a bunch of common application deploy
       cases
@@ -51,4 +61,4 @@ entries:
     urls:
     - https://github.com/Chia-Network/helm-charts/releases/download/generic-0.1.0/generic-0.1.0.tgz
     version: 0.1.0
-generated: "2023-02-07T19:22:15.361616717Z"
+generated: "2023-02-08T05:22:47.12058664Z"
