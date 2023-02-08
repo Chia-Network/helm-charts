@@ -4,7 +4,7 @@ kind: InnoDBCluster
 metadata:
   name: {{ include "generic.shortname" . }}-mysql
 spec:
-  secretName: {{ include "generic.fullname" . }}-mysql-root
+  secretName: {{ include "generic.shortname" . }}-mysql-root
   tlsUseSelfSigned: true
   instances: {{ .Values.mysql.instances }}
   router:
