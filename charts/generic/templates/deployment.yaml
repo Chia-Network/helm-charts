@@ -70,11 +70,11 @@ spec:
             {{- end }}
             - configMapRef:
                 name: "{{ .Release.Name }}-env"
-            {{- if .Values.mysql.enabled }}
             {{- range $.Values.externalConfigmapEnvironment }}
             - configMapRef:
                 name: "{{ .name }}"
             {{- end }}
+            {{- if .Values.mysql.enabled }}
             - secretRef:
                 name: {{ $shortName }}-mysql-user
                 optional: false
