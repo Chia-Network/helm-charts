@@ -119,8 +119,16 @@ spec:
             - secretRef:
                 name: "{{ $.Release.Name }}-env"
                 optional: false
+            {{- range $.Values.externalSecretEnvironment }}
+            - secretRef:
+                name: "{{ .name }}"
+            {{- end }}
             - configMapRef:
                 name: "{{ $.Release.Name }}-env"
+            {{- range $.Values.externalConfigmapEnvironment }}
+            - configMapRef:
+                name: "{{ .name }}"
+            {{- end }}
             {{- if $.Values.mysql.enabled }}
             - secretRef:
                 name: {{ $shortName }}-mysql-user
