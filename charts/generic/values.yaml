@@ -104,6 +104,10 @@ mysql:
 secretEnvironment: {}
 #  MY_KEY: "My Value"
 
+# These are secrets that already exist in the cluster, that still need to be added to the container environment
+externalSecretEnvironment: []
+#  - name: "secret-name"
+
 # Creates a secret with the following values, and mounts as a file into the main deployment container
 secretFile:
   mountPath: "/etc/secrets"
@@ -114,6 +118,10 @@ secretFile:
 # Creates a configmap with the following values, and mounts as env into the main deployment container
 configmapEnvironment: {}
 #  MY_KEY_2: "My Value"
+
+# These are configmaps that already exist in the cluster, that still need to be added to the container environment
+externalConfigmapEnvironment: []
+#  - name: "configmap-name"
 
 # Creates a configmap with the following values, and mounts as a file into the main deployment container
 configmapFile:
