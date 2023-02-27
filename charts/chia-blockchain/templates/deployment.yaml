@@ -1,11 +1,13 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ .Values.installationType }}
 metadata:
   name: {{ include "chia-blockchain.fullname" . }}
   labels:
     {{- include "chia-blockchain.labels" . | nindent 4 }}
 spec:
+  {{- if eq .Values.installationType "Deployment" }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "chia-blockchain.selectorLabels" . | nindent 6 }}
