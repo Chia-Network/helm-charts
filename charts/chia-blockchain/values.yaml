@@ -35,10 +35,15 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-ports:
-  daemon: 55400
-  peers: 8444
-  rpc: 8555
+chia:
+  hostname: 127.0.0.1 # This should be changed to 0.0.0.0 if you want to communicate with this from other pods
+  daemonPort: 55400
+  fullNodePort: 8444
+  fullNodeRPCPort: 8555
+  service: node
+  keys: none
+  ca: {}
+
 
 service:
   type: ClusterIP

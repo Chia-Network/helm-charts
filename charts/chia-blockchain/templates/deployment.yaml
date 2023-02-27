@@ -31,15 +31,18 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: "{{ $.Release.Name }}-env"
           ports:
             - name: daemon
-              containerPort: {{ .Values.ports.daemon }}
+              containerPort: {{ .Values.chia.daemonPort }}
               protocol: TCP
             - name: peers
-              containerPort: {{ .Values.ports.peers }}
+              containerPort: {{ .Values.chia.fullNodePort }}
               protocol: TCP
             - name: rpc
-              containerPort: {{ .Values.ports.rpc }}
+              containerPort: {{ .Values.chia.fullNodeRPCPort }}
               protocol: TCP
           livenessProbe:
             exec:

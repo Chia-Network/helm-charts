@@ -7,15 +7,15 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.ports.daemon }}
+    - port: {{ .Values.chia.daemonPort }}
       targetPort: daemon
       protocol: TCP
       name: daemon
-    - port: {{ .Values.ports.peers }}
+    - port: {{ .Values.chia.fullNodePort }}
       targetPort: peers
       protocol: TCP
       name: peers
-    - port: {{ .Values.ports.rpc }}
+    - port: {{ .Values.chia.fullNodeRPCPort }}
       targetPort: rpc
       protocol: TCP
       name: rpc
