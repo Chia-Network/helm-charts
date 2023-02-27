@@ -31,9 +31,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          envFrom:
-            - configMapRef:
-                name: "{{ $.Release.Name }}-env"
           ports:
             - name: daemon
               containerPort: {{ .Values.chia.daemonPort }}
@@ -44,6 +41,12 @@ spec:
             - name: rpc
               containerPort: {{ .Values.chia.fullNodeRPCPort }}
               protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: "{{ $.Release.Name }}-env"
+          volumeMounts:
+            - name: secret-ca
+              mountPath: /chia-ca
           livenessProbe:
             exec:
               command:
@@ -56,6 +59,10 @@ spec:
                 - /usr/local/bin/docker-healthcheck.sh
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: secret-ca
+          secret:
+            secretName: "{{ .Release.Name }}-ca"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
