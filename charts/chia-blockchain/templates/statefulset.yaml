@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "chia-blockchain.fullname" . }}
+  labels:
+    {{- include "chia-blockchain.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "chia-blockchain.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chia-blockchain.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "chia-blockchain.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: daemon
+              containerPort: {{ .Values.chia.daemonPort }}
+              protocol: TCP
+            - name: peers
+              containerPort: {{ .Values.chia.fullNodePort }}
+              protocol: TCP
+            - name: rpc
+              containerPort: {{ .Values.chia.fullNodeRPCPort }}
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: "{{ $.Release.Name }}-env"
+          volumeMounts:
+            - name: secret-ca
+              mountPath: /chia-ca
+            - name: chiaroot
+              mountPath: {{ .Values.chia.chia_root }}
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - /usr/local/bin/docker-healthcheck.sh
+          readinessProbe:
+            exec:
+              command:
+                - bash
+                - /usr/local/bin/docker-healthcheck.sh
+          startupProbe:
+            exec:
+              command:
+                - bash
+                - /usr/local/bin/docker-healthcheck.sh
+            failureThreshold: 30
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: secret-ca
+          secret:
+            secretName: "{{ .Release.Name }}-ca"
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  serviceName: {{ include "chia-blockchain.fullname" . }}-headless
+  volumeClaimTemplates:
+    - metadata:
+        name: chiaroot
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.volume.storageClassName }}
+        resources:
+          requests:
+            storage: {{ .Values.volume.size }}

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "chia-blockchain.fullname" . }}
+  labels:
+    {{- include "chia-blockchain.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.chia.daemonPort }}
+      targetPort: daemon
+      protocol: TCP
+      name: daemon
+    - port: {{ .Values.chia.fullNodePort }}
+      targetPort: peers
+      protocol: TCP
+      name: peers
+    - port: {{ .Values.chia.fullNodeRPCPort }}
+      targetPort: rpc
+      protocol: TCP
+      name: rpc
+  selector:
+    {{- include "chia-blockchain.selectorLabels" . | nindent 4 }}
