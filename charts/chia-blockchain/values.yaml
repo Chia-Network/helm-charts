@@ -2,9 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# Can be Deployment, DaemonSet, or StatefulSet
-# Must use StatefulSet if you want to use PVCs for the chia root
-installationType: Deployment
 replicaCount: 1
 
 image:
