@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "chia-blockchain.labels" . | nindent 4 }}
 spec:
-  {{- if eq .Values.installationType "Deployment" }}
+  {{- if or (eq .Values.installationType "Deployment") (eq .Values.installationType "StatefulSet") }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
@@ -49,6 +49,10 @@ spec:
           volumeMounts:
             - name: secret-ca
               mountPath: /chia-ca
+            {{- if eq .Values.installationType "StatefulSet" }}
+            - name: chiaroot
+              mountPath: {{ .Values.chia.chia_root }}
+            {{- end }}
           livenessProbe:
             exec:
               command:
@@ -77,3 +81,16 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if eq .Values.installationType "StatefulSet" }}
+  serviceName: {{ include "chia-blockchain.fullname" . }}-headless
+  volumeClaimTemplates:
+    - metadata:
+        name: chiaroot
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.volume.storageClassName }}
+        resources:
+          requests:
+            storage: {{ .Values.volume.size }}
+  {{- end }}
+

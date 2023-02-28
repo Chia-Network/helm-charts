@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "chia-blockchain.labels" . | nindent 4 }}
 data:
+  CHIA_ROOT: {{ .Values.chia.chia_root }}
   self_hostname: {{ .Values.chia.hostname }}
   keys: {{ .Values.chia.keys }}
   service: {{ .Values.chia.service }}

@@ -2,7 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# Can be Deployment or DaemonSet
+# Can be Deployment, DaemonSet, or StatefulSet
+# Must use StatefulSet if you want to use PVCs for the chia root
 installationType: Deployment
 replicaCount: 1
 
@@ -37,7 +38,12 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+volume:
+  storageClassName: ''
+  size: 150Gi
+
 chia:
+  chia_root: /chia-data
   hostname: 127.0.0.1 # This should be changed to 0.0.0.0 if you want to communicate with this from other pods
   daemonPort: 55400
   fullNodePort: 8444
