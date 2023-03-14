@@ -48,6 +48,7 @@ chia:
   service: node
   keys: none
   log_level: INFO
+  testnet: "false"
   ca:
     # If you want to use a specific CA for chia, you must supply both the .crt and .key
     private_ca_crt: ""
