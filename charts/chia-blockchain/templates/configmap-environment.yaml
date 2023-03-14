@@ -11,4 +11,4 @@ data:
   service: {{ .Values.chia.service }}
   log_level: {{ .Values.chia.log_level }}
   ca: {{ and (gt (len .Values.chia.ca.private_ca_crt) 0) (gt (len .Values.chia.ca.private_ca_key) 0) | ternary "/chia-ca" ""  | quote }}
-  testnet: {{ .Values.chia.testnet }}
+  testnet: "{{ .Values.chia.testnet }}"
