@@ -62,6 +62,10 @@ deployment:
 #    httpGet:
 #      path: /
 #      port: http
+  strategy:
+    maxSurge: 25%
+    maxUnavailable: 25%
+    type: RollingUpdate
 
 service:
   enabled: false

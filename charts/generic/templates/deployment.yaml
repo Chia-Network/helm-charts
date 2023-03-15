@@ -10,6 +10,13 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  strategy:
+    {{- if eq .Values.deployment.strategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxSurge: {{ default "25%" .Values.deployment.strategy.maxSurge }}
+      maxUnavailable: {{ default "25%" .Values.deployment.strategy.maxUnavailable }}
+    {{- end }}
+    type: {{ .Values.deployment.strategy.type }}
   selector:
     matchLabels:
       {{- include "generic.selectorLabels" . | nindent 6 }}
