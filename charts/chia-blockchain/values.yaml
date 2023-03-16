@@ -104,6 +104,15 @@ chia:
       j/xlvBNuzDL6gRJHQg1+d4dO8Lz54NDUbKW8jGl+N/7afGVpGmX9
       -----END RSA PRIVATE KEY-----
 
+chiaExporter:
+  enabled: false
+  image:
+    repository: ghcr.io/chia-network/chia-exporter
+    pullPolicy: Always
+    tag: latest
+  service:
+    portName: metrics # This may need to be updated depending on how the service monitor is configured
+    labels: {}
 
 service:
   type: ClusterIP
