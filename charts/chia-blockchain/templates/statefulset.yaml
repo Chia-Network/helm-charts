@@ -68,6 +68,37 @@ spec:
             periodSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+        {{- if .Values.chiaExporter.enabled }}
+        - name: chia-exporter
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.chiaExporter.image.repository }}:{{ .Values.chiaExporter.image.tag }}"
+          imagePullPolicy: {{ .Values.chiaExporter.image.pullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: 9914
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: "{{ $.Release.Name }}-env"
+          volumeMounts:
+            - name: chiaroot
+              mountPath: {{ .Values.chia.chia_root }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            failureThreshold: 30
+            periodSeconds: 10
+        {{- end }}
       volumes:
         - name: secret-ca
           secret:
