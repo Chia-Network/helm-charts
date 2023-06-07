@@ -87,6 +87,8 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
   tlsEnabled: true
+  # Uncomment the following to use a pre-generated TLS Secret
+  # tlsSecretName: ""
 
 # Creates a MySQL DB cluster and database with the following settings (utilizes MySQL-Operator)
 mysql:
