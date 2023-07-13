@@ -36,20 +36,6 @@ spec:
       serviceAccountName: {{ include "generic.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.mysql.enabled }}
-      initContainers:
-        - name: initdb
-          image: ghcr.io/cmmarslender/mysql-init
-          envFrom:
-            - secretRef:
-                name: {{ $shortName }}-mysql-root
-            - secretRef:
-                name: {{ $shortName }}-mysql-user
-            - secretRef:
-                name: {{ $shortName }}-mysql-read
-            - secretRef:
-                name: {{ $shortName }}-mysql-info
-      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -80,14 +66,6 @@ spec:
             {{- range $.Values.externalConfigmapEnvironment }}
             - configMapRef:
                 name: "{{ .name }}"
-            {{- end }}
-            {{- if .Values.mysql.enabled }}
-            - secretRef:
-                name: {{ $shortName }}-mysql-user
-                optional: false
-            - secretRef:
-                name: {{ $shortName }}-mysql-info
-                optional: false
             {{- end }}
           volumeMounts:
             - name: secret-file
@@ -143,14 +121,6 @@ spec:
             {{- range $.Values.externalConfigmapEnvironment }}
             - configMapRef:
                 name: "{{ .name }}"
-            {{- end }}
-            {{- if $.Values.mysql.enabled }}
-            - secretRef:
-                name: {{ $shortName }}-mysql-user
-                optional: false
-            - secretRef:
-                name: {{ $shortName }}-mysql-info
-                optional: false
             {{- end }}
           volumeMounts:
             - name: secret-file
