@@ -6,6 +6,7 @@ apiVersion: v1
 metadata:
   name: {{ $fullName }}-{{ .name }}
 spec:
+  volumeMode: {{ .volumeMode | default "Filesystem" }}
   accessModes:
     - ReadWriteOnce
   resources:
