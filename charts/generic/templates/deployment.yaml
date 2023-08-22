@@ -77,6 +77,10 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
+            {{- range $.Values.hostVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
             {{- range .Values.sidecars }}
             {{- $sidecarName := .name -}}
             {{- range .sharedEmptyDirs }}
@@ -132,6 +136,10 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
+            {{- range $.Values.hostVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
             {{- range .sharedEmptyDirs }}
             - name: {{ $sidecarName }}-{{ .name }}
               mountPath: {{ .mountPath }}
@@ -148,6 +156,11 @@ spec:
         - name: {{ .name }}
           persistentVolumeClaim:
             claimName: {{ $fullName }}-{{ .name }}
+        {{- end }}
+        {{- range .Values.hostVolumes }}
+        - name: {{ .name }}
+          hostPath:
+            path: {{ .hostPath }}
         {{- end }}
         {{- range .Values.sidecars }}
         {{- $sidecarName := .name -}}
