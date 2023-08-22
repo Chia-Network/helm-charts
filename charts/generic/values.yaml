@@ -127,6 +127,11 @@ volumes: []
 #    storageClassName: longhorn
 #    volumeMode: Filesystem|Block
 
+hostVolumes: []
+#  - name: config
+#    hostPath: /path/on/host/config
+#    mountPath: /config
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
