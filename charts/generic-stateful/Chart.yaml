@@ -1,0 +1,5 @@
+apiVersion: v2
+name: generic-stateful
+description: A generic helm chart that handles a bunch of common stateful set deploy cases
+type: application
+version: 0.1.0
