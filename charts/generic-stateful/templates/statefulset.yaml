@@ -135,17 +135,6 @@ spec:
         - name: configmap-file
           configMap:
             name: "{{ .Release.Name }}-file"
-      volumeClaimTemplates:
-        {{- range .Values.volumeClaimTemplates }}
-        - metadata:
-            name: {{ .name }}
-          spec:
-            accessModes: ["ReadWriteOnce"]
-            storageClassName: {{ .storageClassName }}
-            resources:
-              requests:
-                storage: {{ .size }}
-        {{- end }}
         {{- range .Values.sidecars }}
         {{- $sidecarName := .name -}}
         {{- range .sharedEmptyDirs }}
@@ -165,3 +154,14 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  volumeClaimTemplates:
+    {{- range .Values.volumeClaimTemplates }}
+    - metadata:
+        name: {{ .name }}
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .storageClassName }}
+        resources:
+          requests:
+            storage: {{ .size }}
+    {{- end }}
