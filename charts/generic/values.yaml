@@ -51,6 +51,11 @@ securityContext: {}
 
 deployment:
   containerPort: 80
+  containerPortName: http
+  additionalPorts: []
+#    - name: metrics
+#      containerPort: 9101
+#      protocol: TCP
   # Environment variables to add directly to the deployment configuration (as opposed to via the secret or configmap)
   environment: {}
   #  MY_KEY: "My Value"
@@ -74,6 +79,11 @@ service:
     # application: my-application
     # prometheus: application-metrics
   port: 80
+  additionalPorts: []
+  #    - port: 9101
+  #      targetPort: 9101
+  #      protocol: TCP
+  #      name: metrics
 
 ingress:
   enabled: false

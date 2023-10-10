@@ -43,9 +43,12 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: {{ .Values.deployment.containerPortName }}
               containerPort: {{ .Values.deployment.containerPort }}
               protocol: TCP
+          {{- with .Values.deployment.additionalPorts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.deployment.environment }}
           env:
             {{- range $key, $value := . }}

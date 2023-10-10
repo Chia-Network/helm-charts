@@ -12,9 +12,12 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: {{ .Values.deployment.containerPortName }}
       protocol: TCP
-      name: http
+      name: {{ .Values.deployment.containerPortName }}
+  {{- with .Values.service.additionalPorts }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     {{- include "generic.selectorLabels" . | nindent 4 }}
 {{- end}}
