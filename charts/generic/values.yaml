@@ -79,6 +79,11 @@ service:
     # application: my-application
     # prometheus: application-metrics
   port: 80
+  additionalPorts: []
+  #    - port: 9101
+  #      targetPort: 9101
+  #      protocol: TCP
+  #      name: metrics
 
 ingress:
   enabled: false

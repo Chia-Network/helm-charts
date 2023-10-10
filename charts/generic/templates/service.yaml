@@ -15,11 +15,8 @@ spec:
       targetPort: {{ .Values.deployment.containerPortName }}
       protocol: TCP
       name: {{ .Values.deployment.containerPortName }}
-  {{- range $v := .Values.deployment.additionalPorts }}
-    - port: {{ $v.containerPort }}
-      targetPort: {{ $v.containerPort }}
-      protocol: {{ $v.protocol }}
-      name: {{ $v.name }}
+  {{- with .Values.service.additionalPorts }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   selector:
     {{- include "generic.selectorLabels" . | nindent 4 }}
