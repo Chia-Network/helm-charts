@@ -109,7 +109,7 @@ networkPolicy:
 #    - to:
 #        - namespaceSelector:
 #            matchLabels:
-#              user: chia-blockchain
+#              name: chia-blockchain
 #      ports:
 #        - protocol: TCP
 #          port: 8555
@@ -117,7 +117,7 @@ networkPolicy:
 #    - from:
 #        - namespaceSelector:
 #            matchLabels:
-#              user: chia-blockchain
+#              name: chia-blockchain
 #      ports:
 #        - protocol: TCP
 #          port: 8555
