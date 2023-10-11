@@ -12,6 +12,10 @@ spec:
       operator: In
       values:
         - {{ .Release.Name }}
+    - key: app.kubernetes.io/name
+      operator: In
+      values:
+        - {{ include "generic.name" . }}
   policyTypes:
     {{- with .Values.networkPolicy.policyTypes }}
     {{- toYaml . | nindent 4 }}
