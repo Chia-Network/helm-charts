@@ -211,11 +211,9 @@ spec:
           hostPath:
             path: {{ .hostPath }}
         {{- end }}
-        {{- range .Values.sidecars }}
         {{- range .Values.sharedEmptyDirs }}
         - name: {{ .name }}
           emptyDir: {}
-        {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
