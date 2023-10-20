@@ -36,6 +36,55 @@ spec:
       serviceAccountName: {{ include "generic.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.initContainers }}
+      initContainers:
+      {{- range $.Values.initContainers }}
+        - name: {{ .name }}
+          image: {{ .image }}
+          command: {{ default "" .command }}
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          {{- with $.Values.deployment.environment }}
+          env:
+            {{- range $key, $value := . }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+            {{- end }}
+          {{- end }}
+          envFrom:
+            - secretRef:
+                name: "{{ $.Release.Name }}-env"
+                optional: false
+            {{- range $.Values.externalSecretEnvironment }}
+            - secretRef:
+                name: "{{ .name }}"
+            {{- end }}
+            - configMapRef:
+                name: "{{ $.Release.Name }}-env"
+            {{- range $.Values.externalConfigmapEnvironment }}
+            - configMapRef:
+                name: "{{ .name }}"
+            {{- end }}
+          volumeMounts:
+            - name: secret-file
+              mountPath: {{ $.Values.secretFile.mountPath }}
+            - name: configmap-file
+              mountPath: {{ $.Values.configmapFile.mountPath }}
+            {{- range $.Values.volumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
+            {{- range $.Values.hostVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
+            {{- range $.Values.sharedEmptyDirs }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
+      {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -80,16 +129,13 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
-            {{- range $.Values.hostVolumes }}
+            {{- range .Values.hostVolumes }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
-            {{- range .Values.sidecars }}
-            {{- $sidecarName := .name -}}
-            {{- range .sharedEmptyDirs }}
-            - name: {{ $sidecarName }}-{{ .name }}
+            {{- range .Values.sharedEmptyDirs }}
+            - name: {{ .name }}
               mountPath: {{ .mountPath }}
-            {{- end }}
             {{- end }}
           {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
@@ -143,8 +189,8 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
-            {{- range .sharedEmptyDirs }}
-            - name: {{ $sidecarName }}-{{ .name }}
+            {{- range $.Values.sharedEmptyDirs }}
+            - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
         {{- end }}
@@ -165,12 +211,9 @@ spec:
           hostPath:
             path: {{ .hostPath }}
         {{- end }}
-        {{- range .Values.sidecars }}
-        {{- $sidecarName := .name -}}
-        {{- range .sharedEmptyDirs }}
-        - name: {{ $sidecarName }}-{{ .name }}
+        {{- range .Values.sharedEmptyDirs }}
+        - name: {{ .name }}
           emptyDir: {}
-        {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
