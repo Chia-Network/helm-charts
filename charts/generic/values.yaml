@@ -11,6 +11,11 @@ image:
   pullPolicy: IfNotPresent
   tag: latest
 
+# sharedEmptyDirs will be shared between the main application container, sidecars, and initContainers
+sharedEmptyDirs: []
+#  - name: example-shared
+#    mountPath: /var/shared
+
 initContainers: []
 #  - name: init-myservice
 #    image: busybox:1.28
@@ -25,9 +30,6 @@ sidecars: []
 #      pullPolicy: IfNotPresent
 #      tag: latest
 #    environment: {}
-#    sharedEmptyDirs:
-#      - name: example-shared
-#        mountPath: /var/shared
 
 imagePullSecrets: []
 nameOverride: ""

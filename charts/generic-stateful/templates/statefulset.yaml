@@ -68,12 +68,9 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
-            {{- range .Values.sidecars }}
-            {{- $sidecarName := .name -}}
-            {{- range .sharedEmptyDirs }}
-            - name: {{ $sidecarName }}-{{ .name }}
+            {{- range .Values.sharedEmptyDirs }}
+            - name: {{ .name }}
               mountPath: {{ .mountPath }}
-            {{- end }}
             {{- end }}
           {{- with .Values.statefulset.livenessProbe }}
           livenessProbe:
@@ -123,8 +120,8 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
-            {{- range .sharedEmptyDirs }}
-            - name: {{ $sidecarName }}-{{ .name }}
+            {{- range $.Values.sharedEmptyDirs }}
+            - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
         {{- end }}
@@ -135,12 +132,9 @@ spec:
         - name: configmap-file
           configMap:
             name: "{{ .Release.Name }}-file"
-        {{- range .Values.sidecars }}
-        {{- $sidecarName := .name -}}
-        {{- range .sharedEmptyDirs }}
-        - name: {{ $sidecarName }}-{{ .name }}
+        {{- range .Values.sharedEmptyDirs }}
+        - name: {{ .name }}
           emptyDir: {}
-        {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

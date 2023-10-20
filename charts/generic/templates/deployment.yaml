@@ -53,14 +53,14 @@ spec:
           {{- end }}
           envFrom:
             - secretRef:
-                name: "{{ .Release.Name }}-env"
+                name: "{{ $.Release.Name }}-env"
                 optional: false
             {{- range $.Values.externalSecretEnvironment }}
             - secretRef:
                 name: "{{ .name }}"
             {{- end }}
             - configMapRef:
-                name: "{{ .Release.Name }}-env"
+                name: "{{ $.Release.Name }}-env"
             {{- range $.Values.externalConfigmapEnvironment }}
             - configMapRef:
                 name: "{{ .name }}"
@@ -79,12 +79,9 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
-            {{- range $.Values.sidecars }}
-            {{- $sidecarName := .name -}}
-            {{- range .sharedEmptyDirs }}
-            - name: {{ $sidecarName }}-{{ .name }}
+            {{- range $.Values.sharedEmptyDirs }}
+            - name: {{ .name }}
               mountPath: {{ .mountPath }}
-            {{- end }}
             {{- end }}
       {{- end }}
       {{- end }}
@@ -132,16 +129,13 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
-            {{- range $.Values.hostVolumes }}
+            {{- range .Values.hostVolumes }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
-            {{- range .Values.sidecars }}
-            {{- $sidecarName := .name -}}
-            {{- range .sharedEmptyDirs }}
-            - name: {{ $sidecarName }}-{{ .name }}
+            {{- range .Values.sharedEmptyDirs }}
+            - name: {{ .name }}
               mountPath: {{ .mountPath }}
-            {{- end }}
             {{- end }}
           {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
@@ -195,8 +189,8 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
-            {{- range .sharedEmptyDirs }}
-            - name: {{ $sidecarName }}-{{ .name }}
+            {{- range $.Values.sharedEmptyDirs }}
+            - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
         {{- end }}
@@ -218,9 +212,8 @@ spec:
             path: {{ .hostPath }}
         {{- end }}
         {{- range .Values.sidecars }}
-        {{- $sidecarName := .name -}}
-        {{- range .sharedEmptyDirs }}
-        - name: {{ $sidecarName }}-{{ .name }}
+        {{- range .Values.sharedEmptyDirs }}
+        - name: {{ .name }}
           emptyDir: {}
         {{- end }}
         {{- end }}

@@ -11,6 +11,10 @@ image:
   pullPolicy: IfNotPresent
   tag: latest
 
+sharedEmptyDirs: []
+#  - name: example-shared
+#    mountPath: /var/shared
+
 sidecars: []
 #  - name: example-sidecar
 #    image:
@@ -18,9 +22,6 @@ sidecars: []
 #      pullPolicy: IfNotPresent
 #      tag: latest
 #    environment: {}
-#    sharedEmptyDirs:
-#      - name: example-shared
-#        mountPath: /var/shared
 
 imagePullSecrets: []
 nameOverride: ""
