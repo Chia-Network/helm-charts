@@ -145,6 +145,8 @@ secretFile:
   values: {}
   stringValues: {}
   # filename: "file content"
+  # Certain cases only need a single file mounted, and its beneficial to not shadow the directory it's mounted on top of
+  # subPath: "file.ext"
 
 # Creates a configmap with the following values, and mounts as env into the main deployment container
 configmapEnvironment: {}

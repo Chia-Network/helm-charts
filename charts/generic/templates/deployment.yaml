@@ -68,6 +68,9 @@ spec:
           volumeMounts:
             - name: secret-file
               mountPath: {{ $.Values.secretFile.mountPath }}
+              {{- if $.Values.secretFile.subPath }}
+              subPath: {{ $.Values.secretFile.subPath }}
+              {{- end }}
             - name: configmap-file
               mountPath: {{ $.Values.configmapFile.mountPath }}
             {{- range $.Values.volumes }}
