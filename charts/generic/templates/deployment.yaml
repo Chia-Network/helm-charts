@@ -67,6 +67,10 @@ spec:
                 name: "{{ .name }}"
             {{- end }}
           volumeMounts:
+            {{- range $.Values.sharedEmptyDirs }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
             - name: secret-file
               mountPath: {{ $.Values.secretFile.mountPath }}
               {{- if $.Values.secretFile.subPath }}
@@ -80,10 +84,6 @@ spec:
               readOnly: {{ .readOnly }}
             {{- end }}
             {{- range $.Values.hostVolumes }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
-            {{- end }}
-            {{- range $.Values.sharedEmptyDirs }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
@@ -124,6 +124,10 @@ spec:
                 name: "{{ .name }}"
             {{- end }}
           volumeMounts:
+            {{- range .Values.sharedEmptyDirs }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
             - name: secret-file
               mountPath: {{ .Values.secretFile.mountPath }}
             - name: configmap-file
@@ -134,10 +138,6 @@ spec:
               readOnly: {{ .readOnly }}
             {{- end }}
             {{- range .Values.hostVolumes }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
-            {{- end }}
-            {{- range .Values.sharedEmptyDirs }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
@@ -180,6 +180,10 @@ spec:
                 name: "{{ .name }}"
             {{- end }}
           volumeMounts:
+            {{- range $.Values.sharedEmptyDirs }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
             - name: secret-file
               mountPath: {{ $.Values.secretFile.mountPath }}
             - name: configmap-file
@@ -193,12 +197,12 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
-            {{- range $.Values.sharedEmptyDirs }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
-            {{- end }}
         {{- end }}
       volumes:
+        {{- range .Values.sharedEmptyDirs }}
+        - name: {{ .name }}
+          emptyDir: {}
+        {{- end }}
         - name: secret-file
           secret:
             secretName: "{{ .Release.Name }}-file"
@@ -214,10 +218,6 @@ spec:
         - name: {{ .name }}
           hostPath:
             path: {{ .hostPath }}
-        {{- end }}
-        {{- range .Values.sharedEmptyDirs }}
-        - name: {{ .name }}
-          emptyDir: {}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
