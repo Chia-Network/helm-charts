@@ -2,4 +2,4 @@ apiVersion: v2
 name: generic
 description: A generic helm chart that handles a bunch of common application deploy cases
 type: application
-version: 1.5.3
+version: 1.5.4
