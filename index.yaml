@@ -48,6 +48,16 @@ entries:
     version: 0.1.0
   generic:
   - apiVersion: v2
+    created: "2023-11-01T19:33:57.406000856Z"
+    description: A generic helm chart that handles a bunch of common application deploy
+      cases
+    digest: 8d02b9e8455f77faf71db0aaf98cb359a885f79728a509365635368e931b9503
+    name: generic
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/generic-1.5.5/generic-1.5.5.tgz
+    version: 1.5.5
+  - apiVersion: v2
     created: "2023-10-25T06:31:24.191106005Z"
     description: A generic helm chart that handles a bunch of common application deploy
       cases
@@ -279,6 +289,16 @@ entries:
     version: 0.1.0
   generic-stateful:
   - apiVersion: v2
+    created: "2023-11-01T19:33:57.625859583Z"
+    description: A generic helm chart that handles a bunch of common stateful set
+      deploy cases
+    digest: 4d92e8bfd202a4ba88c372dd2179b5f5617e7a5230e97c65d683a0af7f4edb6e
+    name: generic-stateful
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.3.1/generic-stateful-0.3.1.tgz
+    version: 0.3.1
+  - apiVersion: v2
     created: "2023-10-20T19:02:20.574175846Z"
     description: A generic helm chart that handles a bunch of common stateful set
       deploy cases
@@ -308,4 +328,4 @@ entries:
     urls:
     - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.1.0/generic-stateful-0.1.0.tgz
     version: 0.1.0
-generated: "2023-10-25T06:31:24.191406606Z"
+generated: "2023-11-01T19:33:57.626230886Z"
