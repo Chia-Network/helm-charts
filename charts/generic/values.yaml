@@ -106,7 +106,7 @@ ingress:
     - host: chart-example.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
   tlsEnabled: true
   # Uncomment the following to use a pre-generated TLS Secret
   # tlsSecretName: ""
