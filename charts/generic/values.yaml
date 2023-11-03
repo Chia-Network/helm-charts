@@ -82,6 +82,7 @@ deployment:
     maxSurge: 25%
     maxUnavailable: 25%
     type: RollingUpdate
+  lifecycle: {}
 
 service:
   enabled: false

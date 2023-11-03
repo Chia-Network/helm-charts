@@ -154,6 +154,8 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          lifecycle:
+            {{- toYaml .Values.deployment.lifecycle | nindent 12 }}
         {{- range .Values.sidecars -}}
         {{- $sidecarName := .name }}
         - name: {{ $sidecarName }}
