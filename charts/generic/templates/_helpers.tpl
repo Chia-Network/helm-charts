@@ -2,7 +2,14 @@
 Expand the name of the chart.
 */}}
 {{- define "generic.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Release.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Get the instance name
+*/}}
+{{- define "generic.instance" -}}
+{{- default .Release.Name .Values.instanceOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -56,7 +63,7 @@ Selector labels
 */}}
 {{- define "generic.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "generic.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/instance: {{ include "generic.instance" . }}
 {{- end }}
 
 {{/*
