@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   chia-blockchain:
   - apiVersion: v2
+    created: "2023-12-05T22:15:38.509316862Z"
+    description: A Helm chart for Chia Blockchain
+    digest: 88200b67d0068caf07c8a99eb67d3f4ebaba1f0a099c3a7e36363b551513849a
+    name: chia-blockchain
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/chia-blockchain-0.5.1/chia-blockchain-0.5.1.tgz
+    version: 0.5.1
+  - apiVersion: v2
     created: "2023-12-05T22:05:22.615132138Z"
     description: A Helm chart for Chia Blockchain
     digest: dcc2cbd5122456e3f6eff95451cf1a04d73828bed3e218f17c4d98d8c834a19f
@@ -357,4 +366,4 @@ entries:
     urls:
     - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.1.0/generic-stateful-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-05T22:05:22.615225512Z"
+generated: "2023-12-05T22:15:38.509402962Z"
