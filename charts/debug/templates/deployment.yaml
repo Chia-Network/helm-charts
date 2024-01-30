@@ -35,16 +35,20 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if .Values.pvcName }}
+          {{- with .Values.pvcNames }}
           volumeMounts:
-            - name: data
-              mountPath: /data
+            {{- range . }}
+            - name: "{{ . }}"
+              mountPath: "/pvcs/{{ . }}"
+            {{- end }}
           {{- end }}
-      {{- if .Values.pvcName }}
+      {{- with .Values.pvcNames }}
       volumes:
+        {{- range . }}
         - name: data
           persistentVolumeClaim:
-            claimName: {{ .Values.pvcName }}
+            claimName: {{ . }}
+        {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -10,7 +10,9 @@ image:
   tag: main
 
 # If set, will mount an existing PVC into the container at /data
-pvcName: ""
+pvcNames: []
+#  - pvc-name-1
+#  - pvc-name-2
 
 imagePullSecrets: []
 nameOverride: ""
