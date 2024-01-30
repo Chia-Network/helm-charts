@@ -64,6 +64,17 @@ entries:
     urls:
     - https://github.com/Chia-Network/helm-charts/releases/download/chia-blockchain-0.1.0/chia-blockchain-0.1.0.tgz
     version: 0.1.0
+  debug:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-01-30T21:27:56.250222121Z"
+    description: A Helm chart that does debugging things
+    digest: 3148639be8b1f6daa54e22a77fbad8a54649fca1703accc0d3f216c2048055b6
+    name: debug
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/debug-0.1.0/debug-0.1.0.tgz
+    version: 0.1.0
   generic:
   - apiVersion: v2
     created: "2023-12-04T19:00:39.223726948Z"
@@ -366,4 +377,4 @@ entries:
     urls:
     - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.1.0/generic-stateful-0.1.0.tgz
     version: 0.1.0
-generated: "2023-12-05T22:15:38.509402962Z"
+generated: "2024-01-30T21:27:56.250350041Z"
