@@ -45,7 +45,7 @@ spec:
       {{- with .Values.pvcNames }}
       volumes:
         {{- range . }}
-        - name: data
+        - name: {{ . }}
           persistentVolumeClaim:
             claimName: {{ . }}
         {{- end }}
