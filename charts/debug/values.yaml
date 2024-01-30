@@ -9,7 +9,7 @@ image:
   pullPolicy: Always
   tag: main
 
-# If set, will mount an existing PVC into the container at /data
+# If set, will mount an existing PVC into the container at /pvcs/pvc-name
 pvcNames: []
 #  - pvc-name-1
 #  - pvc-name-2
