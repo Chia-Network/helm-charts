@@ -8,7 +8,11 @@ metadata:
 spec:
   volumeMode: {{ .volumeMode | default "Filesystem" }}
   accessModes:
+    {{- if .accessModes }}
+    {{- toYaml .accessModes | nindent 4 }}
+    {{- else }}
     - ReadWriteOnce
+    {{- end }}
   resources:
     requests:
       storage: {{ .size }}

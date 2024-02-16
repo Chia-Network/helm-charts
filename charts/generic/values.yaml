@@ -171,6 +171,8 @@ volumes: []
 #    mountPath: /my-example-volume
 #    readOnly: false
 #    size: 1Gi
+#    accessModes:
+#      - ReadWriteMany
 #    storageClassName: longhorn
 #    volumeMode: Filesystem|Block
 

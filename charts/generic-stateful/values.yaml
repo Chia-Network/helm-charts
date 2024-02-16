@@ -121,6 +121,8 @@ volumeClaimTemplates: []
 #    mountPath: /my-example-volume
 #    readOnly: false
 #    size: 1Gi
+#    accessModes:
+#      - ReadWriteOnce
 #    storageClassName: longhorn
 
 resources: {}
