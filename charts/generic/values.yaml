@@ -176,6 +176,12 @@ volumes: []
 #    storageClassName: longhorn
 #    volumeMode: Filesystem|Block
 
+# Persistent Volumes created/managed external to this helm release
+externalVolumes: []
+#  - name: example-volume
+#    mountPath: /my-example-volume
+#    readOnly: false
+
 hostVolumes: []
 #  - name: config
 #    hostPath: /path/on/host/config

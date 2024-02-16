@@ -68,6 +68,11 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
+            {{- range .Values.externalVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
             {{- range .Values.sharedEmptyDirs }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -120,6 +125,11 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
+            {{- range $.Values.externalVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
             {{- range $.Values.sharedEmptyDirs }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -132,6 +142,11 @@ spec:
         - name: configmap-file
           configMap:
             name: "{{ .Release.Name }}-file"
+        {{- range .Values.externalVolumes }}
+        - name: "{{ .name }}"
+          persistentVolumeClaim:
+            claimName: {{ .name }}
+        {{- end }}
         {{- range .Values.sharedEmptyDirs }}
         - name: {{ .name }}
           emptyDir: {}
