@@ -116,6 +116,12 @@ configmapFile:
   values: {}
   # filename: "file content"
 
+# Persistent Volumes created/managed external to this helm release
+externalVolumes: []
+#  - name: example-volume
+#    mountPath: /my-example-volume
+#    readOnly: false
+
 volumeClaimTemplates: []
 #  - name: example-volume
 #    mountPath: /my-example-volume

@@ -83,6 +83,11 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
+            {{- range $.Values.externalVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
             {{- range $.Values.hostVolumes }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -136,6 +141,11 @@ spec:
             - name: configmap-file
               mountPath: {{ .Values.configmapFile.mountPath }}
             {{- range .Values.volumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
+            {{- range .Values.externalVolumes }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
@@ -201,6 +211,11 @@ spec:
               mountPath: {{ .mountPath }}
               readOnly: {{ .readOnly }}
             {{- end }}
+            {{- range $.Values.externalVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly }}
+            {{- end }}
             {{- range $.Values.hostVolumes }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -221,6 +236,11 @@ spec:
         - name: {{ .name }}
           persistentVolumeClaim:
             claimName: {{ $fullName }}-{{ .name }}
+        {{- end }}
+        {{- range .Values.externalVolumes }}
+        - name: "{{ .name }}"
+          persistentVolumeClaim:
+            claimName: {{ .name }}
         {{- end }}
         {{- range .Values.hostVolumes }}
         - name: {{ .name }}
