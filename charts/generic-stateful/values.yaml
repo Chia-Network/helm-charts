@@ -37,6 +37,12 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# Specifies whether to recreate Pods on a redeploy if nothing else about the underlying Pods changed.
+# This is useful for Statefulsets that deploy an unchanging image tag like :latest, 
+# but still want the Pods to recreate to use the image pullPolicy to re-pull the image.
+# This creates an annotation on the Pods with the current helm release number.
+recreatePodsOnUpgrade: false
+
 podAnnotations: {}
 
 podSecurityContext: {}
