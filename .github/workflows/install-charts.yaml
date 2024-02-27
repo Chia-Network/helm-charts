@@ -18,7 +18,7 @@ jobs:
         run: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v3
 
       - name: Install generic chart
         uses: Chia-Network/actions/helm/deploy@main
