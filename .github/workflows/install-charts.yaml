@@ -1,0 +1,42 @@
+name: Test Install Charts
+
+on: pull_request
+
+jobs:
+  install-charts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Install generic chart
+        uses: Chia-Network/actions/helm/deploy@main
+        with:
+          namespace: "generic"
+          app_name: "generic-test"
+          helm_chart: "./charts/generic"
+          helm_values: "./charts/generic/values.yaml"
+
+      - name: Install generic-stateful chart
+        uses: Chia-Network/actions/helm/deploy@main
+        with:
+          namespace: "generic-stateful"
+          app_name: "generic-stateful-test"
+          helm_chart: "./charts/generic-stateful"
+          helm_values: "./charts/generic-stateful/values.yaml"
+
+      - name: Install chia-blockchain chart
+        uses: Chia-Network/actions/helm/deploy@main
+        with:
+          namespace: "chia-blockchain"
+          app_name: "chia-blockchain"
+          helm_chart: "./charts/chia-blockchain"
+          helm_values: "./charts/chia-blockchain/values.yaml"

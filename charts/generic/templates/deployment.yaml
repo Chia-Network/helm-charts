@@ -22,9 +22,12 @@ spec:
       {{- include "generic.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.recreatePodsOnUpgrade }}
+        helm/release: "{{ .Release.Revision }}"
       {{- end }}
       labels:
         {{- include "generic.selectorLabels" . | nindent 8 }}
