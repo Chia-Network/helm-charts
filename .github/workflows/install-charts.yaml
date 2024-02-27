@@ -33,14 +33,6 @@ jobs:
           helm_chart: "./charts/generic-stateful"
           helm_values: "./charts/generic-stateful/values.yaml"
 
-      - name: Install debug chart
-        uses: Chia-Network/actions/helm/deploy@main
-        with:
-          namespace: "debug"
-          app_name: "debug-test"
-          helm_chart: "./charts/generic"
-          helm_values: "./charts/debug/values.yaml"
-
       - name: Install chia-blockchain chart
         uses: Chia-Network/actions/helm/deploy@main
         with:
