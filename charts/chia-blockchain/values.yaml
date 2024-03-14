@@ -123,12 +123,12 @@ chiaExporter:
   # MySQL is an optional part of chia exporter that currently is used alongside MaxMind ASN DB to record ASNs
   mysql:
     enabled: false
-    mysql_host: "127.0.0.1"
-    mysql_port: "3306"
-    mysql_user: "chia-exporter"
-    mysql_password: ""
-    mysql_db_name: "chia-exporter"
-    mysql_batch_size: "250"
+    host: "127.0.0.1"
+    port: "3306"
+    user: "chia-exporter"
+    password: ""
+    db_name: "chia-exporter"
+    batch_size: "250"
 
 service:
   type: ClusterIP
