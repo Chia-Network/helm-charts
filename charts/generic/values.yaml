@@ -49,7 +49,7 @@ serviceAccount:
   name: ""
 
 # Specifies whether to recreate Pods on a redeploy if nothing else about the underlying Pods changed.
-# This is useful for Deployments that deploy an unchanging image tag like :latest, 
+# This is useful for Deployments that deploy an unchanging image tag like :latest,
 # but still want the Pods to recreate to use the image pullPolicy to re-pull the image.
 # This creates an annotation on the Pods with the current helm release number.
 recreatePodsOnUpgrade: false
@@ -70,6 +70,8 @@ securityContext: {}
 deployment:
   containerPort: 80
   containerPortName: http
+  command: [] # Optional, Equivalent of ENTRYPOINT
+  args: [] # Optional, Equivalent of CMD
   additionalPorts: []
 #    - name: metrics
 #      containerPort: 9101
