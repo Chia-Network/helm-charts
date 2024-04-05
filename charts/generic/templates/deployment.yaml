@@ -231,6 +231,11 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
+            {{- range $.Values.configmapFiles }}
+            - name: configmapfiles
+              mountPath: {{ .mountPath }}/{{ .filename }}
+              subPath: {{ .filename }}
+            {{- end }}
         {{- end }}
       volumes:
         {{- range .Values.sharedEmptyDirs }}
@@ -243,6 +248,14 @@ spec:
         - name: configmap-file
           configMap:
             name: "{{ .Release.Name }}-file"
+        - name: configmap-files
+          configMap:
+            name: "{{ .Release.Name }}-files"
+            {{- range $.Values.configmapFiles }}
+            items:
+              - key: {{ .filename }}
+                path: {{ .filename }}
+            {{- end }}
         {{- range .Values.volumes }}
         - name: {{ .name }}
           persistentVolumeClaim:
