@@ -6,5 +6,6 @@ metadata:
     {{- include "generic.labels" . | nindent 4 }}
 data:
   {{- range $.Values.configmapFiles }}
-  {{ .filename }}: {{ .content }}
+  {{ .filename }}: |
+    {{- .content | nindent 4 }}
   {{- end }}

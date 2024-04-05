@@ -95,6 +95,11 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
+            {{- range $.Values.configmapFiles }}
+            - name: configmap-files
+              mountPath: {{ .mountPath }}/{{ .filename }}
+              subPath: {{ .filename }}
+            {{- end }}
       {{- end }}
       {{- end }}
       containers:
@@ -165,6 +170,11 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
+            {{- range $.Values.configmapFiles }}
+            - name: configmap-files
+              mountPath: {{ .mountPath }}/{{ .filename }}
+              subPath: {{ .filename }}
+            {{- end }}
           {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -232,7 +242,7 @@ spec:
               mountPath: {{ .mountPath }}
             {{- end }}
             {{- range $.Values.configmapFiles }}
-            - name: configmapfiles
+            - name: configmap-files
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
