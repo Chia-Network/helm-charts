@@ -132,7 +132,7 @@ chiaExporter:
 
 service:
   type: ClusterIP
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: ""
 
 localService:
   type: ClusterIP
