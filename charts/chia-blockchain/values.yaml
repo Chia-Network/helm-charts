@@ -132,6 +132,13 @@ chiaExporter:
 
 service:
   type: ClusterIP
+  externalTrafficPolicy: ""
+
+localService:
+  type: ClusterIP
+
+metricsService:
+  type: ClusterIP
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

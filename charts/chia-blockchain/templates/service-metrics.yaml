@@ -9,7 +9,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.metricsService.type }}
   ports:
     - port: 9914
       targetPort: metrics
