@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "chia-blockchain.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.localService.type }}
   internalTrafficPolicy: Local
   ports:
     - port: {{ .Values.chia.daemonPort }}
