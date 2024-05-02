@@ -6,6 +6,7 @@ metadata:
     {{- include "chia-blockchain.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
   ports:
     - port: {{ .Values.chia.daemonPort }}
       targetPort: daemon
