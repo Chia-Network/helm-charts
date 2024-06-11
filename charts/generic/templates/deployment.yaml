@@ -100,6 +100,11 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
+            {{- range $.Values.secretFiles }}
+            - name: secret-files
+              mountPath: {{ .mountPath }}/{{ .filename }}
+              subPath: {{ .filename }}
+            {{- end }}
       {{- end }}
       {{- end }}
       containers:
@@ -175,6 +180,11 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
+            {{- range $.Values.secretFiles }}
+            - name: secret-files
+              mountPath: {{ .mountPath }}/{{ .filename }}
+              subPath: {{ .filename }}
+            {{- end }}
           {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -246,6 +256,11 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
+            {{- range $.Values.secretFiles }}
+            - name: secret-files
+              mountPath: {{ .mountPath }}/{{ .filename }}
+              subPath: {{ .filename }}
+            {{- end }}
         {{- end }}
       volumes:
         {{- range .Values.sharedEmptyDirs }}
@@ -261,10 +276,22 @@ spec:
         - name: configmap-files
           configMap:
             name: "{{ .Release.Name }}-files"
-            {{- range $.Values.configmapFiles }}
+            {{- if ne (len $.Values.configmapFiles) 0 }}
             items:
+            {{- range $.Values.configmapFiles }}
               - key: {{ .filename }}
                 path: {{ .filename }}
+            {{- end }}
+            {{- end }}
+        - name: secret-files
+          secret:
+            secretName: "{{ .Release.Name }}-files"
+            {{- if ne (len $.Values.secretFiles) 0 }}
+            items:
+            {{- range $.Values.secretFiles }}
+              - key: {{ .filename }}
+                path: {{ .filename }}
+            {{- end }}
             {{- end }}
         {{- range .Values.volumes }}
         - name: {{ .name }}
