@@ -121,6 +121,11 @@ ingress:
   # Uncomment the following to use a pre-generated TLS Secret
   # tlsSecretName: ""
 
+  # Set to false if TLS is enabled, but you're using an ingress class that doesn't support TLS cert secrets
+  tlsSecretEnabled: true
+  # Switch between different Ingress rule styles. Can be one of "rules", or "defaultBackend"
+  ruleType: "rules"
+
 networkPolicy:
   enabled: false
   policyTypes: []
