@@ -160,6 +160,18 @@ secretFile:
   # Certain cases only need a single file mounted, and its beneficial to not shadow the directory it's mounted on top of
   # subPath: "file.ext"
 
+# This is the newer alternative to secretFile that mounts each file in the secret as a single file
+# rather than overtaking the whole mountPath directory and deleting any files that may have existed there prior
+# This also allows the flexibility of mounting many files to different mountpaths, since the mountpath is controlled
+# per file
+secretFiles: []
+#  - mountPath: /etc/config
+#    filename: .env
+#    content: |
+#      file=content
+#      goes=here
+
+
 # Creates a configmap with the following values, and mounts as env into the main deployment container
 configmapEnvironment: {}
 #  MY_KEY_2: "My Value"
@@ -174,7 +186,7 @@ configmapFile:
   values: {}
   # filename: "file content"
 
-# This is the newer alternative to configmapFile that mounts each file in the secret as a single file
+# This is the newer alternative to configmapFile that mounts each file in the configmap as a single file
 # rather than overtaking the whole mountPath directory and deleting any files that may have existed there prior
 # This also allows the flexibility of mounting many files to different mountpaths, since the mountpath is controlled
 # per file
