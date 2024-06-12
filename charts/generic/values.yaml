@@ -148,6 +148,24 @@ networkPolicy:
 #        - protocol: TCP
 #          port: 8555
 
+serviceMonitor:
+  enabled: false
+  # Changes the servicemonitor's spec.endpoints[0].port
+  # Can be a port number or name
+  endpointPort: metrics
+  ## The label to use to retrieve the job name from.
+  ## jobLabel: "app.kubernetes.io/name"
+  additionalLabels: {}
+  annotations: {}
+  namespaceSelector: {}
+  ## Default: scrape .Release.Namespace or namespaceOverride only
+  ## To scrape all, use the following:
+  ## namespaceSelector:
+  ##   any: true
+  targetLabels: []
+  relabelings: []
+  metricRelabelings: []
+
 # Creates a secret with the following values, and mounts as env into the main deployment container
 secretEnvironment: {}
 #  MY_KEY: "My Value"
