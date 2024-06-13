@@ -99,6 +99,8 @@ service:
   additionalLabels: {}
     # application: my-application
     # prometheus: application-metrics
+  annotations: {}
+    # external-dns.alpha.kubernetes.io/hostname: testing.example.com
   port: 80
   additionalPorts: []
   #    - port: 9101
