@@ -133,6 +133,8 @@ chiaExporter:
 service:
   type: ClusterIP
   externalTrafficPolicy: ""
+  annotations: {}
+  # external-dns.alpha.kubernetes.io/hostname: testing.example.com
 
 localService:
   type: ClusterIP
