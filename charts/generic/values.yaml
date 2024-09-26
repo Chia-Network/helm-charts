@@ -87,6 +87,13 @@ deployment:
 #    httpGet:
 #      path: /
 #      port: http
+  startupProbe: {}
+#    httpGet:
+#      path: /
+#      port: http
+#    initialDelaySeconds: 0  # No delay before starting to check
+#    periodSeconds: 10       # Check every 10 seconds
+#    failureThreshold: 60    # Allows up to 60 consecutive failures (10 minutes)
   strategy:
     maxSurge: 25%
     maxUnavailable: 25%
