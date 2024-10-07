@@ -45,7 +45,18 @@ spec:
         - name: {{ .name }}
           image: {{ .image }}
           imagePullPolicy: {{ default "IfNotPresent" .imagePullPolicy }}
-          command: {{ default "" .command }}
+          {{- if .command }}
+          command:
+            {{- range .command }}
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if .args }}
+          args:
+            {{- range .args }}
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
           securityContext:
             {{- toYaml $.Values.securityContext | nindent 12 }}
           {{- with $.Values.deployment.environment }}
