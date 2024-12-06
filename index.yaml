@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   chia-blockchain:
   - apiVersion: v2
+    created: "2024-12-06T17:30:35.56501263Z"
+    description: A Helm chart for Chia Blockchain
+    digest: 8f66927dadb051d767c4a5d5c688394d727f6ffce4f21dc1fb193301ebc6c26f
+    name: chia-blockchain
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/chia-blockchain-0.8.0/chia-blockchain-0.8.0.tgz
+    version: 0.8.0
+  - apiVersion: v2
     created: "2024-06-13T20:00:10.913367365Z"
     description: A Helm chart for Chia Blockchain
     digest: 155de188fe73856703d8d933cd620baeffdb5953ac2936aae4f506031fa14e43
@@ -112,6 +121,16 @@ entries:
     - https://github.com/Chia-Network/helm-charts/releases/download/debug-0.1.0/debug-0.1.0.tgz
     version: 0.1.0
   generic:
+  - apiVersion: v2
+    created: "2024-12-06T17:30:35.712460232Z"
+    description: A generic helm chart that handles a bunch of common application deploy
+      cases
+    digest: 8c46a938ed411b889dd2f052e3c00cbfbb2e54cac01dfb9639cb3d40dc4c3274
+    name: generic
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/generic-1.13.0/generic-1.13.0.tgz
+    version: 1.13.0
   - apiVersion: v2
     created: "2024-10-07T18:04:48.691699995Z"
     description: A generic helm chart that handles a bunch of common application deploy
@@ -484,6 +503,16 @@ entries:
     version: 0.1.0
   generic-stateful:
   - apiVersion: v2
+    created: "2024-12-06T17:30:35.839774886Z"
+    description: A generic helm chart that handles a bunch of common stateful set
+      deploy cases
+    digest: fd731675a8c4432f81d57837b3dcb8c3a54f08d30fbfaedf8d5b159c793df4cb
+    name: generic-stateful
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.4.0/generic-stateful-0.4.0.tgz
+    version: 0.4.0
+  - apiVersion: v2
     created: "2024-06-13T20:00:11.176293911Z"
     description: A generic helm chart that handles a bunch of common stateful set
       deploy cases
@@ -563,4 +592,4 @@ entries:
     urls:
     - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.1.0/generic-stateful-0.1.0.tgz
     version: 0.1.0
-generated: "2024-10-07T18:04:48.69206192Z"
+generated: "2024-12-06T17:30:35.840055368Z"
