@@ -237,7 +237,7 @@ volumes: []
 #    readOnly: false
 #    size: 1Gi
 #    accessModes:
-#      - ReadWriteMany
+#      - ReadWriteOnce
 #    storageClassName: ceph-nvme
 #    volumeMode: Filesystem|Block
 
