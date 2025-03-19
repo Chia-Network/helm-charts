@@ -238,7 +238,7 @@ volumes: []
 #    size: 1Gi
 #    accessModes:
 #      - ReadWriteMany
-#    storageClassName: longhorn
+#    storageClassName: ceph-nvme
 #    volumeMode: Filesystem|Block
 
 # Persistent Volumes created/managed external to this helm release
