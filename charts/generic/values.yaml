@@ -205,6 +205,20 @@ secretFiles: []
 #      file=content
 #      goes=here
 
+# Allows mounting files from an already existing secret in the cluster to this deployment
+# "filename" needs to match both the key in the secret and the desired filename in the container
+externalSecretFiles: []
+#  - secretName: my-secret
+#    files:
+#      - mountPath: /etc/config
+#        filename: .env
+#      - mountPath: /etc/config
+#        filename: config
+#  - secretName: other-secret
+#    files:
+#      - mountPath: /mount/path
+#        filename: file
+
 
 # Creates a configmap with the following values, and mounts as env into the main deployment container
 configmapEnvironment: {}

@@ -116,6 +116,13 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
+            {{- range $ext := .Values.externalSecretFiles }}
+            {{- range $file := $ext.files }}
+            - name: ext-s-{{ $ext.secretName }}
+              mountPath: {{ $file.mountPath }}/{{ $file.filename }}
+              subPath: {{ $file.filename }}
+            {{- end }}
+            {{- end }}
       {{- end }}
       {{- end }}
       containers:
@@ -195,6 +202,13 @@ spec:
             - name: secret-files
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
+            {{- end }}
+            {{- range $ext := .Values.externalSecretFiles }}
+            {{- range $file := $ext.files }}
+            - name: ext-s-{{ $ext.secretName }}
+              mountPath: {{ $file.mountPath }}/{{ $file.filename }}
+              subPath: {{ $file.filename }}
+            {{- end }}
             {{- end }}
           {{- with .Values.deployment.livenessProbe }}
           livenessProbe:
@@ -276,6 +290,13 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
+            {{- range $ext := .Values.externalSecretFiles }}
+            {{- range $file := $ext.files }}
+            - name: ext-s-{{ $ext.secretName }}
+              mountPath: {{ $file.mountPath }}/{{ $file.filename }}
+              subPath: {{ $file.filename }}
+            {{- end }}
+            {{- end }}
         {{- end }}
       volumes:
         {{- range .Values.sharedEmptyDirs }}
@@ -308,6 +329,16 @@ spec:
                 path: {{ .filename }}
             {{- end }}
             {{- end }}
+        {{- range $.Values.externalSecretFiles }}
+        - name: ext-s-{{ .secretName }}
+          secret:
+            secretName: {{ .secretName }}
+            items:
+            {{- range .files }}
+              - key: {{ .filename }}
+                path: {{ .filename }}
+            {{- end }}
+        {{- end }}
         {{- range .Values.volumes }}
         - name: {{ .name }}
           persistentVolumeClaim:
