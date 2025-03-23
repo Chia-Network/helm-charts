@@ -116,7 +116,7 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
-            {{- range $ext := .Values.externalSecretFiles }}
+            {{- range $ext := $.Values.externalSecretFiles }}
             {{- range $file := $ext.files }}
             - name: ext-s-{{ $ext.secretName }}
               mountPath: {{ $file.mountPath }}/{{ $file.filename }}
@@ -203,7 +203,7 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
-            {{- range $ext := .Values.externalSecretFiles }}
+            {{- range $ext := $.Values.externalSecretFiles }}
             {{- range $file := $ext.files }}
             - name: ext-s-{{ $ext.secretName }}
               mountPath: {{ $file.mountPath }}/{{ $file.filename }}
@@ -290,7 +290,7 @@ spec:
               mountPath: {{ .mountPath }}/{{ .filename }}
               subPath: {{ .filename }}
             {{- end }}
-            {{- range $ext := .Values.externalSecretFiles }}
+            {{- range $ext := $.Values.externalSecretFiles }}
             {{- range $file := $ext.files }}
             - name: ext-s-{{ $ext.secretName }}
               mountPath: {{ $file.mountPath }}/{{ $file.filename }}
