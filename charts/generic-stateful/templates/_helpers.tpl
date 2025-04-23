@@ -46,17 +46,17 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "generic-stateful.labels" -}}
-helm.sh/chart: {{ include "generic-stateful.chart" . }}
 {{ include "generic-stateful.selectorLabels" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "generic-stateful.selectorLabels" -}}
+helm.sh/chart: {{ include "generic-stateful.chart" . }}
 app.kubernetes.io/name: {{ include "generic-stateful.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
