@@ -53,17 +53,17 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "generic.labels" -}}
-helm.sh/chart: {{ include "generic.chart" . }}
 {{ include "generic.selectorLabels" . }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "generic.selectorLabels" -}}
+helm.sh/chart: {{ include "generic.chart" . }}
 app.kubernetes.io/name: {{ include "generic.name" . }}
 app.kubernetes.io/instance: {{ include "generic.instance" . }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
