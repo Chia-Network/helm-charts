@@ -26,15 +26,17 @@ spec:
   {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
-  {{- if .Values.ingress.tlsEnabled }}
+  {{- if .Values.ingress.tls }}
   tls:
+    {{- range .Values.ingress.tls }}
     - hosts:
-      {{- range .Values.ingress.hosts }}
-        - {{ .host | quote }}
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      {{- if .secretName }}
+      secretName: {{ .secretName }}
       {{- end }}
-      {{- if .Values.ingress.tlsSecretEnabled }}
-      secretName: "{{ .Values.ingress.tlsSecretName | default (printf "%s-tls" .Release.Name) }}"
-      {{- end }}
+    {{- end }}
   {{- end }}
   {{- if eq $.Values.ingress.ruleType "rules" }}
   rules:
