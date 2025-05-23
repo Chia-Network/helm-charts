@@ -154,6 +154,11 @@ spec:
             {{- end }}
           {{- end }}
           envFrom:
+            {{- if .Values.deployment.secretEnvironment }}
+            - secretRef:
+                name: "{{ .Release.Name }}-main-env"
+                optional: false
+            {{- end }}
             - secretRef:
                 name: "{{ .Release.Name }}-env"
                 optional: false
@@ -241,6 +246,11 @@ spec:
             {{- end }}
           {{- end }}
           envFrom:
+            {{- if .secretEnvironment }}
+            - secretRef:
+                name: "{{ $.Release.Name }}-{{ $sidecarName }}-env"
+                optional: false
+            {{- end }}
             - secretRef:
                 name: "{{ $.Release.Name }}-env"
                 optional: false
