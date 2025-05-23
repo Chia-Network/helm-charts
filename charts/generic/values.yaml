@@ -33,6 +33,9 @@ sidecars: []
 #      pullPolicy: IfNotPresent
 #      tag: latest
 #    environment: {}
+#      MY_KEY: "My Value"
+#    secretEnvironment: {}
+#      MY_KEY: "My Value"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -80,6 +83,9 @@ deployment:
 #      protocol: TCP
   # Environment variables to add directly to the deployment configuration (as opposed to via the secret or configmap)
   environment: {}
+  #  MY_KEY: "My Value"
+  # Secret environment variables to add ONLY to the main container (will not be shared with sidecars/init containers)
+  secretEnvironment: {}
   #  MY_KEY: "My Value"
   livenessProbe: {}
 #    httpGet:
@@ -177,7 +183,7 @@ serviceMonitor:
   relabelings: []
   metricRelabelings: []
 
-# Creates a secret with the following values, and mounts as env into the main deployment container
+# Creates a secret with the following values, and mounts as env into all the containers
 secretEnvironment: {}
 #  MY_KEY: "My Value"
 
@@ -185,7 +191,7 @@ secretEnvironment: {}
 externalSecretEnvironment: []
 #  - name: "secret-name"
 
-# Creates a secret with the following values, and mounts as a file into the main deployment container
+# Creates a secret with the following values, and mounts as a file into all the containers
 secretFile:
   mountPath: "/etc/secrets"
   values: {}
