@@ -143,6 +143,27 @@ ingress:
   # Switch between different Ingress rule styles. Can be one of "rules", or "defaultBackend"
   ruleType: "rules"
 
+gatewayAPI:
+  # This supports the v1 HTTPRoute API schema. It assumes a properly configured GatewayClass and Gateway is already installed and programmed.
+  httpRoute:
+    enabled: false
+    # Defines which Gateways this Route wants to attach to. The Gateway must be configured to accept HTTPRoutes from this namespace.
+    parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        # Uncomment the following lines and change the values to point to your gateway
+        # name: default
+        # namespace: gateway-system
+
+    # Defines a list of hostnames to use for matching the Host header of requests.
+    hostnames:
+      - chart-example.local
+
+    # Because HTTPRoute rules are so extensible, it is complicated to generate a catch-all set of generic rules.
+    # This chart provides a minimal matcher and backendRef rule by default, but rules can be defined here instead and are provided to the HTTPRoute as-is.
+    # See the HTTPRoute documentation for configuration details: https://gateway-api.sigs.k8s.io/api-types/httproute/
+    # rules: {}
+
 networkPolicy:
   enabled: false
   policyTypes: []
