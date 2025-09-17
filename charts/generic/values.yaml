@@ -36,6 +36,10 @@ sidecars: []
 #      MY_KEY: "My Value"
 #    secretEnvironment: {}
 #      MY_KEY: "My Value"
+#    ports:
+#     - name: metrics
+#       containerPort: 9101
+#       protocol: TCP
 
 imagePullSecrets: []
 nameOverride: ""

@@ -22,6 +22,10 @@ sidecars: []
 #      pullPolicy: IfNotPresent
 #      tag: latest
 #    environment: {}
+#    ports:
+#     - name: metrics
+#       containerPort: 9101
+#       protocol: TCP
 
 imagePullSecrets: []
 nameOverride: ""
