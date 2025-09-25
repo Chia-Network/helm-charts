@@ -40,6 +40,8 @@ sidecars: []
 #     - name: metrics
 #       containerPort: 9101
 #       protocol: TCP
+#    command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+#    args: ['args', 'moreargs']
 
 imagePullSecrets: []
 nameOverride: ""
