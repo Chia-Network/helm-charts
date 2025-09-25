@@ -238,6 +238,18 @@ spec:
             {{- toYaml $.Values.securityContext | nindent 12 }}
           image: "{{ .image.repository }}:{{ .image.tag }}"
           imagePullPolicy: {{ .image.pullPolicy }}
+          {{- if .command }}
+          command:
+            {{- range .command }}
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if .args }}
+          args:
+            {{- range .args }}
+            - {{ . | quote }}
+            {{- end }}
+          {{- end }}
           {{- with .ports }}
           ports:
             {{- toYaml . | nindent 12 }}
