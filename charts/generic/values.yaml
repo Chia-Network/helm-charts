@@ -129,6 +129,21 @@ service:
   #      protocol: TCP
   #      name: metrics
 
+# Sometimes, an additional service of a different type is needed
+additionalServices:
+  - name: service-name # If omitted, it will be named like the primary service, with an incrementing number
+    type: LoadBalancer
+    additionalLabels: {}
+    # application: my-application
+    # prometheus: application-metrics
+    annotations: {}
+    # external-dns.alpha.kubernetes.io/hostname: testing.example.com
+    ports: []
+    #  - port: 9101
+    #    targetPort: 9101
+    #    protocol: TCP
+    #    name: metrics
+
 ingress:
   enabled: false
   className: ""
