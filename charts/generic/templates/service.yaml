@@ -14,6 +14,9 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
+  {{- if and .Values.service.loadBalancerClass (ne .Values.service.loadBalancerClass "") }}
+  loadBalancerClass: {{ .Values.service.loadBalancerClass }}
+  {{- end }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.deployment.containerPortName }}

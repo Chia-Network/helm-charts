@@ -117,6 +117,7 @@ deployment:
 service:
   enabled: false
   type: ClusterIP
+  loadBalancerClass: ""
   additionalLabels: {}
     # application: my-application
     # prometheus: application-metrics
@@ -133,6 +134,7 @@ service:
 additionalServices: []
 #  - name: service-name # If omitted, it will be named like the primary service, with an incrementing number
 #    type: LoadBalancer
+#    loadBalancerClass: ""
 #    additionalLabels: {}
 #    # application: my-application
 #    # prometheus: application-metrics
