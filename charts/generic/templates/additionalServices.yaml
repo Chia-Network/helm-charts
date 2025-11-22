@@ -17,6 +17,9 @@ metadata:
   {{- end }}
 spec:
   type: {{ $svc.type }}
+  {{- if and $svc.loadBalancerClass (ne $svc.loadBalancerClass "") }}
+  loadBalancerClass: {{ $svc.loadBalancerClass }}
+  {{- end }}
   ports:
     {{- toYaml $svc.ports | nindent 4 }}
   selector:
