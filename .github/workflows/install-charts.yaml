@@ -71,7 +71,7 @@ jobs:
         run: |
           set +e
           helm template test ./charts/generic -f ./charts/generic/test-values-deployment-rwo-fail.yaml 2>&1 | tee /tmp/helm-output.txt
-          EXIT_CODE=$?
+          EXIT_CODE=${PIPESTATUS[0]}
           set -e
           if [ $EXIT_CODE -eq 0 ]; then
             echo "✗ Expected validation failure for RWO volume with replicas > 1, but helm template succeeded"
