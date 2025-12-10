@@ -18,7 +18,7 @@
 {{- $allRWX = false }}
 {{- end }}
 {{- if not $allRWX }}
-{{- fail (printf "volume '%s' cannot be used with deployments when replicaCount > 1. All access modes must be ReadWriteMany for multiple replicas. Either use ReadWriteMany access mode for all modes or use mode: 'stateful' with volumeClaimTemplates for multiple replicas with persistent storage." $volume.name) }}
+{{- fail (printf "volume '%s' cannot be used with deployments when replicaCount > 1. All access modes must be ReadWriteMany for multiple replicas. Either use ReadWriteMany for all volumes or use mode: 'stateful' with volumeClaimTemplates for multiple replicas with persistent storage." $volume.name) }}
 {{- end }}
 {{- end }}
 {{- end }}
