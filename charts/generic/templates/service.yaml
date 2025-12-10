@@ -1,4 +1,5 @@
 {{- if .Values.service.enabled -}}
+{{- $containerPortName := .Values.deployment.containerPortName }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,9 +20,9 @@ spec:
   {{- end }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.deployment.containerPortName }}
+      targetPort: {{ $containerPortName }}
       protocol: TCP
-      name: {{ .Values.deployment.containerPortName }}
+      name: {{ $containerPortName }}
   {{- with .Values.service.additionalPorts }}
     {{- toYaml . | nindent 4 }}
   {{- end }}

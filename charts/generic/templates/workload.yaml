@@ -1,7 +1,8 @@
 {{- $fullName := include "generic.fullname" . -}}
 {{- $shortName := include "generic.shortname" . -}}
+{{- $isDeployment := eq .Values.mode "deployment" }}
 apiVersion: apps/v1
-kind: Deployment
+kind: {{ if $isDeployment }}Deployment{{ else }}StatefulSet{{ end }}
 metadata:
   name: {{ $fullName }}
   labels:
@@ -10,6 +11,7 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  {{- if $isDeployment }}
   strategy:
     {{- if eq .Values.deployment.strategy.type "RollingUpdate" }}
     rollingUpdate:
@@ -17,6 +19,7 @@ spec:
       maxUnavailable: {{ default "25%" .Values.deployment.strategy.maxUnavailable }}
     {{- end }}
     type: {{ .Values.deployment.strategy.type }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "generic.selectorLabels" . | nindent 6 }}
@@ -365,10 +368,12 @@ spec:
                 path: {{ .filename }}
             {{- end }}
         {{- end }}
+        {{- if $isDeployment }}
         {{- range .Values.volumes }}
         - name: {{ .name }}
           persistentVolumeClaim:
             claimName: {{ $fullName }}-{{ .name }}
+        {{- end }}
         {{- end }}
         {{- range .Values.externalVolumes }}
         - name: "{{ .name }}"
@@ -396,3 +401,26 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  {{- if not $isDeployment }}
+  volumeClaimTemplates:
+    {{- range .Values.volumes }}
+    - metadata:
+        name: {{ .name }}
+      spec:
+        accessModes:
+          {{- if .accessModes }}
+          {{- toYaml .accessModes | nindent 10 }}
+          {{- else }}
+          - ReadWriteOnce
+          {{- end }}
+        {{- if .storageClassName }}
+        storageClassName: {{ .storageClassName }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .size }}
+        {{- if .volumeMode }}
+        volumeMode: {{ .volumeMode }}
+        {{- end }}
+    {{- end }}
+  {{- end }}
