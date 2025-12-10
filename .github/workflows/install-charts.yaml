@@ -17,13 +17,59 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-      - name: Install generic chart
+      - name: Install generic chart (deployment mode)
         uses: Chia-Network/actions/helm/deploy@main
         with:
           namespace: "generic"
           app_name: "generic-test"
           helm_chart: "./charts/generic"
           helm_values: "./charts/generic/values.yaml"
+
+      - name: Test generic chart (stateful mode)
+        uses: Chia-Network/actions/helm/deploy@main
+        with:
+          namespace: "generic-stateful-mode"
+          app_name: "generic-stateful-mode-test"
+          helm_chart: "./charts/generic"
+          helm_values: "./charts/generic/test-values-stateful.yaml"
+
+      - name: Test volume restrictions - Deployment with RWO and replicas > 1 (should fail)
+        run: |
+          set +e
+          helm template test ./charts/generic -f ./charts/generic/test-values-deployment-rwo-fail.yaml 2>&1 | tee /tmp/helm-output.txt
+          EXIT_CODE=$?
+          set -e
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "✗ Expected validation failure for RWO volume with replicas > 1, but helm template succeeded"
+            exit 1
+          fi
+          if grep -q "cannot be used with deployments when replicaCount > 1" /tmp/helm-output.txt; then
+            echo "✓ Validation correctly failed for RWO volume with replicas > 1"
+          else
+            echo "✗ Validation failed but with unexpected error message"
+            cat /tmp/helm-output.txt
+            exit 1
+          fi
+
+      - name: Test volume restrictions - Deployment with RWX and replicas > 1 (should succeed)
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-deployment-rwx-success.yaml > /dev/null
+          if [ $? -eq 0 ]; then
+            echo "✓ Validation passed for RWX volume with replicas > 1"
+          else
+            echo "✗ Unexpected failure for RWX volume with replicas > 1"
+            exit 1
+          fi
+
+      - name: Test volume restrictions - StatefulSet with RWO and replicas > 1 (should succeed)
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-stateful.yaml > /dev/null
+          if [ $? -eq 0 ]; then
+            echo "✓ Validation passed for StatefulSet with RWO volume and replicas > 1"
+          else
+            echo "✗ Unexpected failure for StatefulSet with RWO volume and replicas > 1"
+            exit 1
+          fi
 
       - name: Install generic-stateful chart
         uses: Chia-Network/actions/helm/deploy@main
