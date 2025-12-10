@@ -1,5 +1,5 @@
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║                          ⚠️  DEPRECATION WARNING  ⚠️                           ║
+║                          ⚠️  DEPRECATION WARNING  ⚠️                         ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                              ║
 ║  The 'generic-stateful' chart has been DEPRECATED and will be removed in     ║
