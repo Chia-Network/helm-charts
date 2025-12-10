@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Mode can be "deployment" (default) or "stateful" (for StatefulSet)
+mode: deployment
+
 replicaCount: 1
 
 # This is considered the primary container in the deployment
@@ -78,6 +81,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# Configuration for the primary container - works for both deployment and stateful modes
+# Note: "strategy" is only used for Deployment mode (StatefulSets don't support rolling update strategies)
 deployment:
   containerPort: 80
   containerPortName: http
@@ -87,7 +92,7 @@ deployment:
 #    - name: metrics
 #      containerPort: 9101
 #      protocol: TCP
-  # Environment variables to add directly to the deployment configuration (as opposed to via the secret or configmap)
+  # Environment variables to add directly to the container configuration (as opposed to via the secret or configmap)
   environment: {}
   #  MY_KEY: "My Value"
   # Secret environment variables to add ONLY to the main container (will not be shared with sidecars/init containers)
@@ -296,6 +301,10 @@ configmapFiles: []
 #      file=content
 #      goes=here
 
+# Persistent volumes - works for both deployment and stateful modes
+# When mode is "deployment": creates PersistentVolumeClaims (one per volume)
+# When mode is "stateful": creates StatefulSet volumeClaimTemplates (one per pod)
+# Both modes support the same structure and fields (including volumeMode)
 volumes: []
 #  - name: example-volume
 #    mountPath: /my-example-volume

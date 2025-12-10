@@ -1,0 +1,27 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          ⚠️  DEPRECATION WARNING  ⚠️                         ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  The 'generic-stateful' chart has been DEPRECATED and will be removed in     ║
+║  a future release.                                                           ║
+║                                                                              ║
+║  Please migrate to the 'generic' chart with mode: stateful                   ║
+║                                                                              ║
+║  Migration steps:                                                            ║
+║  1. Update your values.yaml to use the 'generic' chart                       ║
+║  2. Add 'mode: stateful' to your values                                      ║
+║  3. Change 'statefulset:' to 'deployment:' (same structure)                  ║
+║  4. Change 'volumeClaimTemplates:' to 'volumes:' (same structure)            ║
+║                                                                              ║
+║  Example:                                                                    ║
+║    chart: generic                                                            ║
+║    values:                                                                   ║
+║      mode: stateful                                                          ║
+║      deployment:                                                             ║
+║        containerPort: 80                                                     ║
+║        ...                                                                   ║
+║      volumes:                                                                ║
+║        - name: data                                                          ║
+║          ...                                                                 ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝

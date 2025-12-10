@@ -2,4 +2,8 @@ apiVersion: v2
 name: generic-stateful
 description: A generic helm chart that handles a bunch of common stateful set deploy cases
 type: application
-version: 0.9.0
+version: 0.10.0
+deprecated: true
+annotations:
+  deprecated: "true"
+  deprecation-warning: "This chart is deprecated. Please use the 'generic' chart with mode: stateful instead."
