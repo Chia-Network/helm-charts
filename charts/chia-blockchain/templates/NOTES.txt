@@ -1,0 +1,11 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          ⚠️  DEPRECATION WARNING  ⚠️                         ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  The 'chia-blockchain' chart has been DEPRECATED and will be removed in      ║
+║  a future release.                                                           ║
+║                                                                              ║
+║  Please migrate to Chia Operator:                                            ║
+║  https://github.com/Chia-Network/chia-operator                               ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
