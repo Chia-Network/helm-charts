@@ -16,3 +16,7 @@ type: application
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
 version: 0.9.0
+deprecated: true
+annotations:
+  deprecated: "true"
+  deprecation-warning: "This chart is deprecated. Please migrate to chia-operator."
