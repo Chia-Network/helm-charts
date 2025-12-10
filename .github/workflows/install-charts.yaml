@@ -25,6 +25,23 @@ jobs:
           helm_chart: "./charts/generic"
           helm_values: "./charts/generic/values.yaml"
 
+      - name: Verify generic chart created Deployment
+        run: |
+          kubectl get deployment generic-test -n generic
+          if [ $? -eq 0 ]; then
+            echo "✓ Deployment 'generic-test' exists in namespace 'generic'"
+          else
+            echo "✗ Deployment 'generic-test' not found"
+            exit 1
+          fi
+          # Verify StatefulSet does NOT exist
+          if kubectl get statefulset generic-test -n generic 2>/dev/null; then
+            echo "✗ Unexpected StatefulSet found (should be Deployment)"
+            exit 1
+          else
+            echo "✓ No StatefulSet found (correct)"
+          fi
+
       - name: Test generic chart (stateful mode)
         uses: Chia-Network/actions/helm/deploy@main
         with:
@@ -32,6 +49,23 @@ jobs:
           app_name: "generic-stateful-mode-test"
           helm_chart: "./charts/generic"
           helm_values: "./charts/generic/test-values-stateful.yaml"
+
+      - name: Verify generic chart (stateful mode) created StatefulSet
+        run: |
+          kubectl get statefulset generic-stateful-mode-test -n generic-stateful-mode
+          if [ $? -eq 0 ]; then
+            echo "✓ StatefulSet 'generic-stateful-mode-test' exists in namespace 'generic-stateful-mode'"
+          else
+            echo "✗ StatefulSet 'generic-stateful-mode-test' not found"
+            exit 1
+          fi
+          # Verify Deployment does NOT exist
+          if kubectl get deployment generic-stateful-mode-test -n generic-stateful-mode 2>/dev/null; then
+            echo "✗ Unexpected Deployment found (should be StatefulSet)"
+            exit 1
+          else
+            echo "✓ No Deployment found (correct)"
+          fi
 
       - name: Test volume restrictions - Deployment with RWO and replicas > 1 (should fail)
         run: |
