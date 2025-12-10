@@ -1,5 +1,5 @@
 {{- if eq .Values.mode "deployment" -}}
-{{- if and (gt .Values.replicaCount 1) (ne (len .Values.volumes) 0) }}
+{{- if and (gt (int .Values.replicaCount) 1) (ne (len .Values.volumes) 0) }}
 {{- /*
      Validation: When using deployments with multiple replicas, volumes must use ReadWriteMany (RWX) access mode.
      ReadWriteOnce (RWO) volumes can only be mounted by a single pod, so they cannot be shared across multiple
