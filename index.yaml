@@ -1,6 +1,19 @@
 apiVersion: v1
 entries:
   chia-blockchain:
+  - annotations:
+      deprecated: "true"
+      deprecation-warning: This chart is deprecated. Please migrate to chia-operator.
+    apiVersion: v2
+    created: "2025-12-10T20:52:22.624577513Z"
+    deprecated: true
+    description: A Helm chart for Chia Blockchain
+    digest: d50ccc547a10f0753c861efd434a1a4df7304ea3a673028c6d2c560336237e51
+    name: chia-blockchain
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/chia-blockchain-0.9.0/chia-blockchain-0.9.0.tgz
+    version: 0.9.0
   - apiVersion: v2
     created: "2024-12-06T17:30:35.56501263Z"
     description: A Helm chart for Chia Blockchain
@@ -121,6 +134,16 @@ entries:
     - https://github.com/Chia-Network/helm-charts/releases/download/debug-0.1.0/debug-0.1.0.tgz
     version: 0.1.0
   generic:
+  - apiVersion: v2
+    created: "2025-12-10T20:52:22.872867428Z"
+    description: A generic helm chart that handles a bunch of common application deploy
+      cases
+    digest: f0d7b2dd42434e22e2d4221e090293476b991ed30a0c3b4f874a18f06ee3fb69
+    name: generic
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/generic-1.25.0/generic-1.25.0.tgz
+    version: 1.25.0
   - apiVersion: v2
     created: "2025-11-22T20:40:11.991112418Z"
     description: A generic helm chart that handles a bunch of common application deploy
@@ -612,6 +635,21 @@ entries:
     - https://github.com/Chia-Network/helm-charts/releases/download/generic-0.1.0/generic-0.1.0.tgz
     version: 0.1.0
   generic-stateful:
+  - annotations:
+      deprecated: "true"
+      deprecation-warning: 'This chart is deprecated. Please use the ''generic'' chart
+        with mode: stateful instead.'
+    apiVersion: v2
+    created: "2025-12-10T20:52:23.149961927Z"
+    deprecated: true
+    description: A generic helm chart that handles a bunch of common stateful set
+      deploy cases
+    digest: 9a8cf242db1b4362040f744b10e81262feb1c3e99997992a99a29192e5d03d22
+    name: generic-stateful
+    type: application
+    urls:
+    - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.10.0/generic-stateful-0.10.0.tgz
+    version: 0.10.0
   - apiVersion: v2
     created: "2025-09-18T16:15:40.713093326Z"
     description: A generic helm chart that handles a bunch of common stateful set
@@ -752,4 +790,4 @@ entries:
     urls:
     - https://github.com/Chia-Network/helm-charts/releases/download/generic-stateful-0.1.0/generic-stateful-0.1.0.tgz
     version: 0.1.0
-generated: "2025-11-22T20:40:11.991586759Z"
+generated: "2025-12-10T20:52:23.150302715Z"
