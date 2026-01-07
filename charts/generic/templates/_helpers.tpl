@@ -54,6 +54,7 @@ Common labels
 */}}
 {{- define "generic.labels" -}}
 {{ include "generic.selectorLabels" . }}
+app.kubernetes.io/namespace: {{ .Release.Namespace }}
 {{- end }}
 
 {{/*
