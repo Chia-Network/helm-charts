@@ -41,5 +41,12 @@ spec:
     requests:
       storage: {{ .size }}
   storageClassName: {{ .storageClassName }}
+  {{- if .volumeName }}
+  volumeName: {{ .volumeName }}
+  {{- end }}
+  {{- if .selector }}
+  selector:
+    {{- toYaml .selector | nindent 4 }}
+  {{- end }}
 {{- end }}
 {{- end }}

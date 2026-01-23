@@ -314,6 +314,11 @@ volumes: []
 #      - ReadWriteOnce
 #    storageClassName: ceph-nvme
 #    volumeMode: Filesystem|Block
+#    volumeName: my-persistent-volume # Bind directly to this PV if set (vs letting a storage class provision a PV)
+#    selector: # Selector to match a PV if volumeName is not set (vs letting a storage class provision a PV)
+#      matchLabels:
+#        app: my-app
+#        environment: production
 
 # Persistent Volumes created/managed external to this helm release
 externalVolumes: []
