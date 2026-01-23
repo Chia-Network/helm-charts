@@ -320,6 +320,24 @@ volumes: []
 #        app: my-app
 #        environment: production
 
+# Persistent Volumes - creates PV resources (optional, usually expected to be managed by a storage class)
+persistentVolumes: []
+#  - name: my-persistent-volume
+#    labels:
+#      app: my-app
+#      environment: production
+#    size: 10Gi
+#    accessModes:
+#      - ReadWriteOnce
+#    persistentVolumeReclaimPolicy: Retain
+#    storageClassName: local-storage
+#    extraYaml: # Extra YAML to add directly to the PV spec
+#      mountOptions:
+#        - vers=4.1
+#      nfs:
+#        server: 1.2.3.4
+#        path: /path/on/nfs
+
 # Persistent Volumes created/managed external to this helm release
 externalVolumes: []
 #  - name: example-volume

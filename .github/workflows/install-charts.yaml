@@ -105,6 +105,41 @@ jobs:
             exit 1
           fi
 
+      - name: Test PersistentVolumes - verify no PV created by default
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-pv-default.yaml > /tmp/pv-default-output.yaml
+          if grep -q "kind: PersistentVolume" /tmp/pv-default-output.yaml; then
+            echo "✗ Unexpected PersistentVolume found in default values output"
+            exit 1
+          else
+            echo "✓ No PersistentVolume created by default (correct)"
+          fi
+
+      - name: Test PersistentVolumes - verify PVs can be created
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-pv-created.yaml > /tmp/pv-created-output.yaml
+          PV_COUNT=$(grep -c "kind: PersistentVolume" /tmp/pv-created-output.yaml || echo "0")
+          if [ "$PV_COUNT" -eq 2 ]; then
+            echo "✓ Correctly created 2 PersistentVolumes"
+          else
+            echo "✗ Expected 2 PersistentVolumes, found $PV_COUNT"
+            exit 1
+          fi
+          # Verify PV names
+          if grep -q "name: test-pv-1" /tmp/pv-created-output.yaml && grep -q "name: test-pv-2" /tmp/pv-created-output.yaml; then
+            echo "✓ Both PVs have correct names"
+          else
+            echo "✗ PV names not found as expected"
+            exit 1
+          fi
+          # Verify PV specs
+          if grep -q "storage: 10Gi" /tmp/pv-created-output.yaml && grep -q "storage: 5Gi" /tmp/pv-created-output.yaml; then
+            echo "✓ PVs have correct storage sizes"
+          else
+            echo "✗ PV storage sizes not found as expected"
+            exit 1
+          fi
+
       - name: Install generic-stateful chart
         uses: Chia-Network/actions/helm/deploy@main
         with:

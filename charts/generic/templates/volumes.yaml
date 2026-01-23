@@ -40,7 +40,7 @@ spec:
   resources:
     requests:
       storage: {{ .size }}
-  storageClassName: {{ .storageClassName }}
+  storageClassName: {{ .storageClassName | quote }}
   {{- if .volumeName }}
   volumeName: {{ .volumeName }}
   {{- end }}
