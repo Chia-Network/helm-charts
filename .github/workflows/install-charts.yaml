@@ -181,9 +181,12 @@ jobs:
       - name: Test job mode - verify Job ran after install
         run: |
           # Wait for the hook Job to complete
+          set +e
           kubectl wait --for=condition=complete job/generic-job-mode-test \
             -n generic-job-mode --timeout=60s
-          if [ $? -eq 0 ]; then
+          JOB_EXIT=$?
+          set -e
+          if [ $JOB_EXIT -eq 0 ]; then
             echo "✓ Job completed successfully after helm install"
           else
             echo "✗ Job did not complete within timeout"
@@ -208,9 +211,12 @@ jobs:
 
       - name: Test job mode - verify Job ran again after upgrade
         run: |
+          set +e
           kubectl wait --for=condition=complete job/generic-job-mode-test \
             -n generic-job-mode --timeout=60s
-          if [ $? -eq 0 ]; then
+          JOB_EXIT=$?
+          set -e
+          if [ $JOB_EXIT -eq 0 ]; then
             echo "✓ Job completed successfully after helm upgrade (old job was deleted and re-created)"
           else
             echo "✗ Job did not complete within timeout after upgrade"
