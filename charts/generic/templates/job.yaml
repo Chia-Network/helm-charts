@@ -155,6 +155,15 @@ initContainers:
         subPath: {{ $file.filename }}
       {{- end }}
       {{- end }}
+      {{- range $.Values.externalVolumes }}
+      - name: {{ .name }}
+        mountPath: {{ .mountPath }}
+        readOnly: {{ .readOnly }}
+      {{- end }}
+      {{- range $.Values.hostVolumes }}
+      - name: {{ .name }}
+        mountPath: {{ .mountPath }}
+      {{- end }}
 {{- end }}
 {{- end }}
 containers:
@@ -225,6 +234,15 @@ containers:
         mountPath: {{ $file.mountPath }}/{{ $file.filename }}
         subPath: {{ $file.filename }}
       {{- end }}
+      {{- end }}
+      {{- range .Values.externalVolumes }}
+      - name: {{ .name }}
+        mountPath: {{ .mountPath }}
+        readOnly: {{ .readOnly }}
+      {{- end }}
+      {{- range .Values.hostVolumes }}
+      - name: {{ .name }}
+        mountPath: {{ .mountPath }}
       {{- end }}
     resources:
       {{- toYaml .Values.resources | nindent 6 }}
