@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-# Mode can be "deployment" (default) or "stateful" (for StatefulSet)
+# Mode can be "deployment" (default), "stateful" (StatefulSet), "job" (one-time Job run on each deploy), or "cronjob" (scheduled CronJob)
 mode: deployment
 
 replicaCount: 1
@@ -367,6 +367,21 @@ autoscaling:
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
+
+# Job/CronJob configuration - used when mode is "job" or "cronjob"
+job:
+  restartPolicy: Never            # Never or OnFailure. Use Never to create a new pod on each retry; use OnFailure to restart the same pod
+  backoffLimit: 6                 # Number of times the job will retry before marking it as failed
+  activeDeadlineSeconds: ""       # Optional: max seconds the job is allowed to run before being terminated
+  ttlSecondsAfterFinished: ""     # Optional: seconds after completion before the Job is auto-deleted (requires TTLAfterFinished feature gate)
+  completions: 1                  # Number of pods that must complete successfully for the job to be considered done
+  parallelism: 1                  # Number of pods that can run in parallel at any given time
+  # CronJob-specific settings (only used when mode: "cronjob")
+  schedule: ""                    # Required for cronjob mode, e.g. "*/5 * * * *" or "0 2 * * *"
+  concurrencyPolicy: Forbid       # How to handle overlapping runs: Allow (run concurrently), Forbid (skip new run), or Replace (cancel current, start new)
+  successfulJobsHistoryLimit: 3   # Number of successfully completed jobs to retain for inspection
+  failedJobsHistoryLimit: 1       # Number of failed jobs to retain for inspection
+  suspend: false                  # Set to true to pause scheduling of new jobs without deleting the CronJob
 
 nodeSelector: {}
 

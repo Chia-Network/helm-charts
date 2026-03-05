@@ -140,6 +140,158 @@ jobs:
             exit 1
           fi
 
+      - name: Test job mode - verify template structure
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-job.yaml > /tmp/job-output.yaml
+          # Must produce a Job, not a Deployment or StatefulSet
+          if grep -q "kind: Job" /tmp/job-output.yaml; then
+            echo "✓ Job resource found"
+          else
+            echo "✗ Job resource not found"
+            exit 1
+          fi
+          if kubectl get deployment generic-job-mode-test -n generic-job-mode 2>/dev/null || grep -q "kind: Deployment" /tmp/job-output.yaml; then
+            echo "✗ Unexpected Deployment found in job mode output"
+            exit 1
+          else
+            echo "✓ No Deployment in job mode output (correct)"
+          fi
+          # Must have Helm hook annotations for re-run-on-upgrade behavior
+          if grep -q "helm.sh/hook" /tmp/job-output.yaml; then
+            echo "✓ Helm hook annotations present"
+          else
+            echo "✗ Missing helm hook annotations on Job"
+            exit 1
+          fi
+          if grep -q "before-hook-creation" /tmp/job-output.yaml; then
+            echo "✓ before-hook-creation delete policy present"
+          else
+            echo "✗ Missing before-hook-creation delete policy"
+            exit 1
+          fi
+
+      - name: Test job mode - install
+        uses: Chia-Network/actions/helm/deploy@main
+        with:
+          namespace: "generic-job-mode"
+          app_name: "generic-job-mode-test"
+          helm_chart: "./charts/generic"
+          helm_values: "./charts/generic/test-values-job.yaml"
+
+      - name: Test job mode - verify Job ran after install
+        run: |
+          # Wait for the hook Job to complete
+          kubectl wait --for=condition=complete job/generic-job-mode-test \
+            -n generic-job-mode --timeout=60s
+          if [ $? -eq 0 ]; then
+            echo "✓ Job completed successfully after helm install"
+          else
+            echo "✗ Job did not complete within timeout"
+            kubectl describe job generic-job-mode-test -n generic-job-mode
+            exit 1
+          fi
+          # Verify no Deployment was created
+          if kubectl get deployment generic-job-mode-test -n generic-job-mode 2>/dev/null; then
+            echo "✗ Unexpected Deployment found (should only be a Job)"
+            exit 1
+          else
+            echo "✓ No Deployment found (correct)"
+          fi
+
+      - name: Test job mode - upgrade re-runs the job
+        uses: Chia-Network/actions/helm/deploy@main
+        with:
+          namespace: "generic-job-mode"
+          app_name: "generic-job-mode-test"
+          helm_chart: "./charts/generic"
+          helm_values: "./charts/generic/test-values-job.yaml"
+
+      - name: Test job mode - verify Job ran again after upgrade
+        run: |
+          kubectl wait --for=condition=complete job/generic-job-mode-test \
+            -n generic-job-mode --timeout=60s
+          if [ $? -eq 0 ]; then
+            echo "✓ Job completed successfully after helm upgrade (old job was deleted and re-created)"
+          else
+            echo "✗ Job did not complete within timeout after upgrade"
+            kubectl describe job generic-job-mode-test -n generic-job-mode
+            exit 1
+          fi
+
+      - name: Test cronjob mode - verify template structure
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-cronjob.yaml > /tmp/cronjob-output.yaml
+          # Must produce a CronJob, not a Deployment or StatefulSet
+          if grep -q "kind: CronJob" /tmp/cronjob-output.yaml; then
+            echo "✓ CronJob resource found"
+          else
+            echo "✗ CronJob resource not found"
+            exit 1
+          fi
+          if grep -q "kind: Deployment" /tmp/cronjob-output.yaml; then
+            echo "✗ Unexpected Deployment found in cronjob mode output"
+            exit 1
+          else
+            echo "✓ No Deployment in cronjob mode output (correct)"
+          fi
+          # Must not have Helm hook annotations (CronJob is a normal release resource)
+          if grep -q "helm.sh/hook" /tmp/cronjob-output.yaml; then
+            echo "✗ Unexpected Helm hook annotations on CronJob (should only be on Job mode)"
+            exit 1
+          else
+            echo "✓ No Helm hook annotations on CronJob (correct)"
+          fi
+          # Verify schedule is rendered
+          if grep -q 'schedule: "\*/5 \* \* \* \*"' /tmp/cronjob-output.yaml; then
+            echo "✓ Schedule rendered correctly"
+          else
+            echo "✗ Schedule not found in CronJob output"
+            exit 1
+          fi
+
+      - name: Test cronjob mode - install
+        uses: Chia-Network/actions/helm/deploy@main
+        with:
+          namespace: "generic-cronjob-mode"
+          app_name: "generic-cronjob-mode-test"
+          helm_chart: "./charts/generic"
+          helm_values: "./charts/generic/test-values-cronjob.yaml"
+
+      - name: Test cronjob mode - verify CronJob created
+        run: |
+          kubectl get cronjob generic-cronjob-mode-test -n generic-cronjob-mode
+          if [ $? -eq 0 ]; then
+            echo "✓ CronJob 'generic-cronjob-mode-test' exists in namespace 'generic-cronjob-mode'"
+          else
+            echo "✗ CronJob not found"
+            exit 1
+          fi
+          # Verify no Deployment was created
+          if kubectl get deployment generic-cronjob-mode-test -n generic-cronjob-mode 2>/dev/null; then
+            echo "✗ Unexpected Deployment found (should only be a CronJob)"
+            exit 1
+          else
+            echo "✓ No Deployment found (correct)"
+          fi
+
+      - name: Test cronjob mode - missing schedule should fail
+        run: |
+          set +e
+          helm template test ./charts/generic --set mode=cronjob 2>&1 | tee /tmp/cronjob-no-schedule.txt
+          EXIT_CODE=${PIPESTATUS[0]}
+          set -e
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "✗ Expected validation failure for cronjob without schedule, but helm template succeeded"
+            exit 1
+          fi
+          if grep -q "job.schedule is required" /tmp/cronjob-no-schedule.txt; then
+            echo "✓ Validation correctly failed with expected error message"
+          else
+            echo "✗ Validation failed but with unexpected error message"
+            cat /tmp/cronjob-no-schedule.txt
+            exit 1
+          fi
+
       - name: Install generic-stateful chart
         uses: Chia-Network/actions/helm/deploy@main
         with:

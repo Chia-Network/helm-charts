@@ -1,3 +1,4 @@
+{{- if or (eq .Values.mode "deployment") (eq .Values.mode "stateful") -}}
 {{- $fullName := include "generic.fullname" . -}}
 {{- $shortName := include "generic.shortname" . -}}
 {{- $isDeployment := eq .Values.mode "deployment" }}
@@ -424,3 +425,4 @@ spec:
         {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}
