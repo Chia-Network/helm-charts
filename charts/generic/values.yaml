@@ -370,8 +370,8 @@ autoscaling:
 
 podDisruptionBudget:
   enabled: false
-  maxUnavailable: 1
   # minAvailable and maxUnavailable are mutually exclusive — set only one
+  maxUnavailable: 1
   # minAvailable: 1
   # unhealthyPodEvictionPolicy: IfHealthy
 
