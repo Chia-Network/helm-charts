@@ -368,6 +368,13 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+podDisruptionBudget:
+  enabled: false
+  maxUnavailable: 1
+  # minAvailable and maxUnavailable are mutually exclusive — set only one
+  # minAvailable: 1
+  # unhealthyPodEvictionPolicy: IfHealthy
+
 # Job/CronJob configuration - used when mode is "job" or "cronjob"
 job:
   restartPolicy: Never            # Never or OnFailure. Use Never to create a new pod on each retry; use OnFailure to restart the same pod
