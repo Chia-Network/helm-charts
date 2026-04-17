@@ -36,6 +36,7 @@ jobs:
 
   publish-oci:
     permissions:
+      contents: read
       packages: write
     runs-on: ubuntu-latest
     steps:
@@ -52,9 +53,9 @@ jobs:
         run: |
           owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           for chart in charts/*/; do
-            name=$(basename "$chart")
+            name=$(grep '^name:' "$chart/Chart.yaml" | awk '{print $2}')
             version=$(grep '^version:' "$chart/Chart.yaml" | awk '{print $2}')
-            if helm pull "oci://ghcr.io/${owner}/helm-charts/${name}" --version "$version" 2>/dev/null; then
+            if helm show chart "oci://ghcr.io/${owner}/helm-charts/${name}" --version "$version" > /dev/null 2>&1; then
               echo "::notice::${name}@${version} already exists in OCI registry, skipping"
               continue
             fi
