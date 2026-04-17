@@ -54,7 +54,7 @@ jobs:
           for chart in charts/*/; do
             name=$(basename "$chart")
             version=$(grep '^version:' "$chart/Chart.yaml" | awk '{print $2}')
-            if helm pull "oci://ghcr.io/${owner}/charts/${name}" --version "$version" 2>/dev/null; then
+            if helm pull "oci://ghcr.io/${owner}/helm-charts/${name}" --version "$version" 2>/dev/null; then
               echo "::notice::${name}@${version} already exists in OCI registry, skipping"
               continue
             fi
