@@ -1,0 +1,36 @@
+# Test values to verify Gateway API ListenerSet rendering
+mode: deployment
+replicaCount: 1
+image:
+  repository: nginx
+  tag: latest
+deployment:
+  containerPort: 80
+  containerPortName: http
+gatewayAPI:
+  listenerSet:
+    enabled: true
+    annotations:
+      gateway.k8s.io/test: "true"
+    additionalLabels:
+      listener-tier: edge
+    parentRef:
+      group: gateway.networking.k8s.io
+      kind: Gateway
+      name: parent-gateway
+      namespace: gateway-system
+    listeners:
+      - name: https
+        hostname: chart-example.local
+        port: 443
+        protocol: HTTPS
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: chart-example-tls
+              kind: Secret
+              group: ""
+      - name: http
+        hostname: chart-example.local
+        port: 80
+        protocol: HTTP

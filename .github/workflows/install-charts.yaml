@@ -298,6 +298,117 @@ jobs:
             exit 1
           fi
 
+      - name: Test certificates - verify no Certificate created by default
+        run: |
+          helm template test ./charts/generic > /tmp/cert-default-output.yaml
+          if grep -q "kind: Certificate" /tmp/cert-default-output.yaml; then
+            echo "✗ Unexpected Certificate found in default values output"
+            exit 1
+          else
+            echo "✓ No Certificate created by default (correct)"
+          fi
+
+      - name: Test certificates - verify Certificates can be created
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-certificates.yaml > /tmp/cert-output.yaml
+          CERT_COUNT=$(grep -c "kind: Certificate" /tmp/cert-output.yaml || echo "0")
+          if [ "$CERT_COUNT" -eq 2 ]; then
+            echo "✓ Correctly created 2 Certificates"
+          else
+            echo "✗ Expected 2 Certificates, found $CERT_COUNT"
+            exit 1
+          fi
+          if grep -q "apiVersion: cert-manager.io/v1" /tmp/cert-output.yaml; then
+            echo "✓ Certificate uses cert-manager.io/v1 apiVersion"
+          else
+            echo "✗ Certificate apiVersion not found"
+            exit 1
+          fi
+          if grep -q "name: test-cert-primary" /tmp/cert-output.yaml; then
+            echo "✓ Named Certificate has correct name"
+          else
+            echo "✗ Named Certificate not found"
+            exit 1
+          fi
+          if grep -q "secretName: test-cert-primary-tls" /tmp/cert-output.yaml; then
+            echo "✓ Certificate spec passed through correctly"
+          else
+            echo "✗ Certificate spec not passed through"
+            exit 1
+          fi
+
+      - name: Test certificates - missing spec should fail
+        run: |
+          set +e
+          helm template test ./charts/generic --set 'certificates[0].name=missing-spec' 2>&1 | tee /tmp/cert-missing-spec.txt
+          EXIT_CODE=${PIPESTATUS[0]}
+          set -e
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "✗ Expected validation failure for certificate without spec, but helm template succeeded"
+            exit 1
+          fi
+          if grep -q "certificates\[0\].spec is required" /tmp/cert-missing-spec.txt; then
+            echo "✓ Validation correctly failed with expected error message"
+          else
+            echo "✗ Validation failed but with unexpected error message"
+            cat /tmp/cert-missing-spec.txt
+            exit 1
+          fi
+
+      - name: Test ListenerSet - verify no ListenerSet created by default
+        run: |
+          helm template test ./charts/generic > /tmp/ls-default-output.yaml
+          if grep -q "kind: ListenerSet" /tmp/ls-default-output.yaml; then
+            echo "✗ Unexpected ListenerSet found in default values output"
+            exit 1
+          else
+            echo "✓ No ListenerSet created by default (correct)"
+          fi
+
+      - name: Test ListenerSet - verify ListenerSet can be created
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-listenerset.yaml > /tmp/ls-output.yaml
+          if grep -q "kind: ListenerSet" /tmp/ls-output.yaml; then
+            echo "✓ ListenerSet resource found"
+          else
+            echo "✗ ListenerSet resource not found"
+            exit 1
+          fi
+          if grep -q "apiVersion: gateway.networking.k8s.io/v1" /tmp/ls-output.yaml; then
+            echo "✓ ListenerSet uses standard channel apiVersion"
+          else
+            echo "✗ ListenerSet apiVersion not found"
+            exit 1
+          fi
+          if grep -q "name: parent-gateway" /tmp/ls-output.yaml; then
+            echo "✓ parentRef rendered correctly"
+          else
+            echo "✗ parentRef not rendered"
+            exit 1
+          fi
+          if grep -q "protocol: HTTPS" /tmp/ls-output.yaml && grep -q "protocol: HTTP" /tmp/ls-output.yaml; then
+            echo "✓ Listeners rendered correctly"
+          else
+            echo "✗ Listeners not rendered as expected"
+            exit 1
+          fi
+
+      - name: Test ListenerSet - experimental channel override
+        run: |
+          helm template test ./charts/generic \
+            --set gatewayAPI.listenerSet.enabled=true \
+            --set gatewayAPI.listenerSet.apiVersion=gateway.networking.x-k8s.io/v1alpha1 \
+            --set gatewayAPI.listenerSet.kind=XListenerSet \
+            --set gatewayAPI.listenerSet.parentRef.name=parent-gateway > /tmp/ls-experimental-output.yaml
+          if grep -q "kind: XListenerSet" /tmp/ls-experimental-output.yaml && \
+             grep -q "apiVersion: gateway.networking.x-k8s.io/v1alpha1" /tmp/ls-experimental-output.yaml; then
+            echo "✓ Experimental ListenerSet apiVersion/kind override works"
+          else
+            echo "✗ Experimental override did not render correctly"
+            cat /tmp/ls-experimental-output.yaml
+            exit 1
+          fi
+
       - name: Install generic-stateful chart
         uses: Chia-Network/actions/helm/deploy@main
         with:
