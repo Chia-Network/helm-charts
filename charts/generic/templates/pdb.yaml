@@ -1,4 +1,10 @@
 {{- if .Values.podDisruptionBudget.enabled }}
+{{- if and (kindIs "invalid" .Values.podDisruptionBudget.minAvailable) (kindIs "invalid" .Values.podDisruptionBudget.maxUnavailable) }}
+{{- fail "podDisruptionBudget.enabled is true but neither podDisruptionBudget.minAvailable nor podDisruptionBudget.maxUnavailable is set. Set exactly one to avoid a PDB that blocks all voluntary disruptions (disruptionsAllowed: 0)." }}
+{{- end }}
+{{- if and (not (kindIs "invalid" .Values.podDisruptionBudget.minAvailable)) (not (kindIs "invalid" .Values.podDisruptionBudget.maxUnavailable)) }}
+{{- fail "podDisruptionBudget.minAvailable and podDisruptionBudget.maxUnavailable are mutually exclusive — set only one." }}
+{{- end }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
