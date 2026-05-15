@@ -193,6 +193,66 @@ gatewayAPI:
     # See the HTTPRoute documentation for configuration details: https://gateway-api.sigs.k8s.io/api-types/httproute/
     # rules: {}
 
+  # ListenerSet (GEP-1713) attaches additional listeners to an existing Gateway.
+  # The parent Gateway must allow ListenerSet attachment via spec.allowedListeners.
+  # See: https://gateway-api.sigs.k8s.io/api-types/listenerset/
+  listenerSet:
+    enabled: false
+    # ListenerSet has been a Standard Channel resource since gateway-api v1.5.0
+    # (apiVersion: gateway.networking.k8s.io/v1, kind: ListenerSet).
+    # Override these to use the experimental channel
+    # (gateway.networking.x-k8s.io/v1alpha1, kind: XListenerSet).
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: ListenerSet
+    annotations: {}
+    additionalLabels: {}
+    # The Gateway this ListenerSet attaches to.
+    parentRef:
+      group: gateway.networking.k8s.io
+      kind: Gateway
+      # Uncomment the following lines and change the values to point to your gateway
+      # name: default
+      # namespace: gateway-system
+    # List of listeners to attach to the parent Gateway. Provided to the
+    # ListenerSet spec as-is. See ListenerSet docs for field reference.
+    listeners: []
+    #  - name: https
+    #    hostname: chart-example.local
+    #    port: 443
+    #    protocol: HTTPS
+    #    tls:
+    #      mode: Terminate
+    #      certificateRefs:
+    #        - name: chart-example-tls
+    #          kind: Secret
+    #          group: ""
+
+# cert-manager Certificate resources (cert-manager.io/v1).
+# Each entry creates one Certificate. The full Certificate spec is passed through
+# as-is, so any field supported by cert-manager can be set here.
+# See: https://cert-manager.io/docs/usage/certificate/
+certificates: []
+#  - # Optional. Defaults to the chart fullname (with an index suffix if multiple).
+#    name: ""
+#    annotations: {}
+#    additionalLabels: {}
+#    # The Certificate spec — passed through to the resource as-is.
+#    spec:
+#      secretName: chart-example-tls
+#      commonName: chart-example.local
+#      dnsNames:
+#        - chart-example.local
+#        - www.chart-example.local
+#      issuerRef:
+#        name: letsencrypt
+#        kind: ClusterIssuer
+#        group: cert-manager.io
+#      # duration: 2160h
+#      # renewBefore: 360h
+#      # usages:
+#      #   - server auth
+#      #   - client auth
+
 networkPolicy:
   enabled: false
   policyTypes: []

@@ -1,0 +1,23 @@
+{{- if .Values.gatewayAPI.listenerSet.enabled -}}
+{{- $fullName := include "generic.fullname" . -}}
+apiVersion: {{ .Values.gatewayAPI.listenerSet.apiVersion | default "gateway.networking.k8s.io/v1" }}
+kind: {{ .Values.gatewayAPI.listenerSet.kind | default "ListenerSet" }}
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "generic.labels" . | nindent 4 }}
+    {{- with .Values.gatewayAPI.listenerSet.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.gatewayAPI.listenerSet.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRef:
+    {{- toYaml .Values.gatewayAPI.listenerSet.parentRef | nindent 4 }}
+  {{- with .Values.gatewayAPI.listenerSet.listeners }}
+  listeners:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
