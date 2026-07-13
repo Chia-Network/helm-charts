@@ -43,6 +43,9 @@ spec:
       serviceAccountName: {{ include "generic.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       {{- with .Values.initContainers }}
       initContainers:
       {{- range $.Values.initContainers }}

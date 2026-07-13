@@ -73,6 +73,10 @@ podAnnotations: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
+# When true, containers in the pod share a process namespace (needed for a sidecar
+# to signal processes in another container, e.g. SIGTERM on leader demotion).
+shareProcessNamespace: false
+
 securityContext: {}
   # capabilities:
   #   drop:
