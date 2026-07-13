@@ -24,6 +24,9 @@ spec:
     {{- toYaml $svc.ports | nindent 4 }}
   selector:
     {{- include "generic.selectorLabels" $ | nindent 4 }}
+    {{- with $svc.additionalSelectorLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

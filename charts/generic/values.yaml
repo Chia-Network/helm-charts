@@ -143,6 +143,8 @@ additionalServices: []
 #    additionalLabels: {}
 #    # application: my-application
 #    # prometheus: application-metrics
+#    additionalSelectorLabels: {}
+#      # role: metrics
 #    annotations: {}
 #    # external-dns.alpha.kubernetes.io/hostname: testing.example.com
 #    ports:
