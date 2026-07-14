@@ -30,13 +30,16 @@ controllers to already be installed in the cluster.
    single route sends `/` to the Service; override `routes` for custom routing.
    With `tls.enabled: true`, Contour terminates TLS using `tls.secretName`
    (defaults to `<release>-tls`).
-3. **`certManager.certificate`** — a cert-manager Certificate. Set `enabled: true`,
-   provide `dnsNames`, and point `issuerRef.name` at a configured
-   `Issuer`/`ClusterIssuer`. cert-manager writes the issued cert/key into
-   `secretName` (defaults to `<release>-tls`), which matches the HTTPProxy/Ingress
-   TLS default so the two line up.
+3. **`certificates`** — a list of cert-manager Certificates. Each entry passes its
+   `spec` through to the resource as-is (any cert-manager field is supported), and
+   `name` defaults to the chart fullname (with an index suffix if there are
+   several). Point a cert's `spec.secretName` at the HTTPProxy/Ingress TLS secret
+   (which defaults to `<release>-tls`) to wire the two together. When defining more
+   than one certificate, set an explicit `name` on each — the `<fullname>-<index>`
+   fallback is position-sensitive, so reordering the list would rename (and
+   therefore reissue) a Certificate.
 
-The `<release>-tls` default lets a single wildcard `Certificate` back multiple
-releases (e.g. production plus review apps) that reuse the same Secret. When a
-cert is issued out-of-band, leave `certManager.certificate.enabled` false and
-just set the `tls.secretName` on the HTTPProxy/Ingress.
+Using `<release>-tls` as the shared secret lets a single wildcard `Certificate`
+back multiple releases (e.g. production plus review apps) that reuse the same
+Secret. When a cert is issued out-of-band, leave `certificates` empty and just
+set `tls.secretName` on the HTTPProxy/Ingress.

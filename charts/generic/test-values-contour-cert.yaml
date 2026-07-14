@@ -1,6 +1,6 @@
-# Test values to verify the Contour HTTPProxy and cert-manager Certificate
-# templates render correctly. The HTTPProxy backs the chart Service, and the
-# Certificate issues into the same "<release>-tls" secret the HTTPProxy reuses.
+# Test values to verify the Contour HTTPProxy and a cert-manager Certificate
+# render together and line up: the HTTPProxy terminates TLS with the default
+# "<release>-tls" secret, and the Certificate issues into that same secret.
 mode: deployment
 replicaCount: 1
 image:
@@ -22,12 +22,13 @@ contour:
     tls:
       enabled: true
 
-certManager:
-  certificate:
-    enabled: true
-    dnsNames:
-      - chart-example.local
-      - "*.chart-example.local"
-    issuerRef:
-      name: letsencrypt-cf
-      kind: ClusterIssuer
+certificates:
+  # secretName matches the HTTPProxy default "<release>-tls" (release "test").
+  - spec:
+      secretName: test-tls
+      dnsNames:
+        - chart-example.local
+        - "*.chart-example.local"
+      issuerRef:
+        name: letsencrypt-cf
+        kind: ClusterIssuer

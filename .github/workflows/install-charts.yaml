@@ -323,6 +323,13 @@ jobs:
             cat /tmp/contour-cert-output.yaml
             exit 1
           fi
+          if grep -q "apiVersion: cert-manager.io/v1" /tmp/contour-cert-output.yaml; then
+            echo "✓ Certificate uses cert-manager.io/v1 apiVersion"
+          else
+            echo "✗ Certificate apiVersion not found"
+            cat /tmp/contour-cert-output.yaml
+            exit 1
+          fi
           if grep -q "secretName: test-tls" /tmp/contour-cert-output.yaml; then
             echo "✓ Certificate/HTTPProxy default tls secret name (<release>-tls) rendered"
           else
@@ -395,23 +402,58 @@ jobs:
             exit 1
           fi
 
-      - name: Test cert-manager Certificate - missing dnsNames should fail
+      - name: Test certificates - verify Certificates can be created
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-certificates.yaml > /tmp/cert-output.yaml
+          CERT_COUNT=$(grep -c "kind: Certificate" /tmp/cert-output.yaml || echo "0")
+          if [ "$CERT_COUNT" -eq 2 ]; then
+            echo "✓ Correctly created 2 Certificates"
+          else
+            echo "✗ Expected 2 Certificates, found $CERT_COUNT"
+            exit 1
+          fi
+          if grep -q "apiVersion: cert-manager.io/v1" /tmp/cert-output.yaml; then
+            echo "✓ Certificate uses cert-manager.io/v1 apiVersion"
+          else
+            echo "✗ Certificate apiVersion not found"
+            exit 1
+          fi
+          if grep -q "name: test-cert-primary" /tmp/cert-output.yaml; then
+            echo "✓ Named Certificate has correct name"
+          else
+            echo "✗ Named Certificate not found"
+            exit 1
+          fi
+          if grep -q "secretName: test-cert-primary-tls" /tmp/cert-output.yaml; then
+            echo "✓ Certificate spec passed through correctly"
+          else
+            echo "✗ Certificate spec not passed through"
+            exit 1
+          fi
+          # Unnamed second entry must fall back to an indexed fullname
+          if grep -q "name: test-generic-1" /tmp/cert-output.yaml; then
+            echo "✓ Unnamed Certificate defaults to indexed fullname"
+          else
+            echo "✗ Unnamed Certificate name not defaulted as expected"
+            cat /tmp/cert-output.yaml
+            exit 1
+          fi
+
+      - name: Test certificates - missing spec should fail
         run: |
           set +e
-          helm template test ./charts/generic \
-            --set certManager.certificate.enabled=true \
-            --set certManager.certificate.issuerRef.name=letsencrypt-cf 2>&1 | tee /tmp/cert-no-dns.txt
+          helm template test ./charts/generic --set 'certificates[0].name=missing-spec' 2>&1 | tee /tmp/cert-missing-spec.txt
           EXIT_CODE=${PIPESTATUS[0]}
           set -e
           if [ $EXIT_CODE -eq 0 ]; then
-            echo "✗ Expected validation failure for Certificate without dnsNames, but helm template succeeded"
+            echo "✗ Expected validation failure for certificate without spec, but helm template succeeded"
             exit 1
           fi
-          if grep -q "certManager.certificate.dnsNames is empty" /tmp/cert-no-dns.txt; then
+          if grep -q "certificates\[0\].spec is required" /tmp/cert-missing-spec.txt; then
             echo "✓ Validation correctly failed with expected error message"
           else
             echo "✗ Validation failed but with unexpected error message"
-            cat /tmp/cert-no-dns.txt
+            cat /tmp/cert-missing-spec.txt
             exit 1
           fi
 

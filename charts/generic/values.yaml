@@ -210,9 +210,9 @@ contour:
     fqdn: chart-example.local
     tls:
       enabled: true
-      # Reuse a pre-existing TLS Secret. Defaults to "<release>-tls", which
-      # matches the Secret produced by certManager.certificate below (or the
-      # ingress TLS default) so the two features line up out of the box.
+      # Reuse a pre-existing TLS Secret. Defaults to "<release>-tls" (the same
+      # default the ingress TLS block uses). Point a cert-manager Certificate
+      # (see "certificates" below) at this secretName to have it auto-populated.
       # secretName: ""
       # Terminate TLS at Contour (default) or pass encrypted traffic straight
       # through to the backend. When passthrough is true, secretName is ignored
@@ -226,35 +226,37 @@ contour:
     # the HTTPProxy as-is. See https://projectcontour.io/docs/main/config/api/
     # routes: []
 
-# cert-manager integration. Assumes cert-manager and its cert-manager.io/v1
-# Certificate CRD are already installed, along with the referenced Issuer.
-certManager:
-  certificate:
-    enabled: false
-    annotations: {}
-    # Name of the Certificate resource. Defaults to the chart fullname.
-    # name: ""
-    # Secret where cert-manager stores the issued cert/key. Defaults to
-    # "<release>-tls" so it can be consumed directly by the ingress/HTTPProxy
-    # TLS defaults above.
-    # secretName: ""
-    # DNS names the certificate should be valid for (required when enabled).
-    dnsNames: []
-    #  - chart-example.local
-    #  - "*.chart-example.local"
-    # commonName: chart-example.local
-    # duration: 2160h
-    # renewBefore: 360h
-    # privateKey:
-    #   algorithm: ECDSA
-    #   size: 256
-    # usages:
-    #   - server auth
-    # The Issuer/ClusterIssuer that signs this certificate (name required).
-    issuerRef:
-      name: ""
-      kind: ClusterIssuer
-      group: cert-manager.io
+# cert-manager Certificate resources (cert-manager.io/v1).
+# Each entry creates one Certificate. The full Certificate spec is passed through
+# as-is, so any field supported by cert-manager can be set here.
+# See: https://cert-manager.io/docs/usage/certificate/
+#
+# NOTE: when defining more than one certificate, set an explicit "name" on each.
+# Unnamed entries fall back to "<fullname>-<index>", which is position-sensitive:
+# reordering the list would rename the Certificate, causing cert-manager to prune
+# and reissue it. An explicit name keeps the resource identity stable.
+certificates: []
+#  - # Optional, but recommended (required for stable names when >1 cert).
+#    # Defaults to the chart fullname (with an index suffix if multiple).
+#    name: ""
+#    annotations: {}
+#    additionalLabels: {}
+#    # The Certificate spec — passed through to the resource as-is.
+#    spec:
+#      secretName: chart-example-tls
+#      commonName: chart-example.local
+#      dnsNames:
+#        - chart-example.local
+#        - www.chart-example.local
+#      issuerRef:
+#        name: letsencrypt
+#        kind: ClusterIssuer
+#        group: cert-manager.io
+#      # duration: 2160h
+#      # renewBefore: 360h
+#      # usages:
+#      #   - server auth
+#      #   - client auth
 
 networkPolicy:
   enabled: false
