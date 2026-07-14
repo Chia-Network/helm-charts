@@ -402,6 +402,28 @@ jobs:
             exit 1
           fi
 
+      - name: Test Contour HTTPProxy - TLS passthrough uses tcpproxy, not HTTP routes
+        run: |
+          helm template test ./charts/generic \
+            --set service.enabled=true \
+            --set contour.httpProxy.enabled=true \
+            --set contour.httpProxy.fqdn=passthrough.example.com \
+            --set contour.httpProxy.tls.passthrough=true > /tmp/httpproxy-passthrough.yaml
+          if grep -q "tcpproxy:" /tmp/httpproxy-passthrough.yaml; then
+            echo "✓ Passthrough HTTPProxy routes via tcpproxy"
+          else
+            echo "✗ Passthrough HTTPProxy missing tcpproxy"
+            cat /tmp/httpproxy-passthrough.yaml
+            exit 1
+          fi
+          if grep -q "routes:" /tmp/httpproxy-passthrough.yaml; then
+            echo "✗ Passthrough HTTPProxy should not render HTTP routes"
+            cat /tmp/httpproxy-passthrough.yaml
+            exit 1
+          else
+            echo "✓ Passthrough HTTPProxy does not render HTTP routes"
+          fi
+
       - name: Test certificates - verify Certificates can be created
         run: |
           helm template test ./charts/generic -f ./charts/generic/test-values-certificates.yaml > /tmp/cert-output.yaml

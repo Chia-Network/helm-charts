@@ -216,15 +216,20 @@ contour:
       # secretName: ""
       # Terminate TLS at Contour (default) or pass encrypted traffic straight
       # through to the backend. When passthrough is true, secretName is ignored
-      # and routes must use tcpproxy instead of services.
+      # and Contour routes at L4: the chart emits a default "tcpproxy" to the
+      # Service (not HTTP "routes"). Override with tcpproxy below if needed.
       passthrough: false
       # minimumProtocolVersion: "1.2"
     # Extra HTTPProxy "includes" (delegated routing), passed through as-is.
     # includes: []
     # By default a single route sends all traffic ("/") to the chart's Service
-    # on service.port. Provide routes here to override with your own, passed to
-    # the HTTPProxy as-is. See https://projectcontour.io/docs/main/config/api/
+    # on service.port (or, when tls.passthrough is true, a tcpproxy to it).
+    # Provide routes here to override with your own, passed to the HTTPProxy
+    # as-is. See https://projectcontour.io/docs/main/config/api/
     # routes: []
+    # L4 TCP proxying, passed through as-is. Used for TLS passthrough (and takes
+    # precedence over the generated default). Mutually exclusive with routes.
+    # tcpproxy: {}
 
 # cert-manager Certificate resources (cert-manager.io/v1).
 # Each entry creates one Certificate. The full Certificate spec is passed through

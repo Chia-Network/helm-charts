@@ -29,7 +29,9 @@ controllers to already be installed in the cluster.
 2. **`contour.httpProxy`** — set `enabled: true` and a `fqdn`. By default a
    single route sends `/` to the Service; override `routes` for custom routing.
    With `tls.enabled: true`, Contour terminates TLS using `tls.secretName`
-   (defaults to `<release>-tls`).
+   (defaults to `<release>-tls`). Set `tls.passthrough: true` to forward
+   encrypted traffic to the backend instead — Contour then routes at L4, so the
+   chart emits a default `tcpproxy` to the Service (override via `tcpproxy`).
 3. **`certificates`** — a list of cert-manager Certificates. Each entry passes its
    `spec` through to the resource as-is (any cert-manager field is supported), and
    `name` defaults to the chart fullname (with an index suffix if there are
