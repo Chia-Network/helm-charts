@@ -24,8 +24,10 @@ with [cert-manager](https://cert-manager.io/), the chart can render a
 instead of (or alongside) a plain Ingress. Both require the respective CRDs and
 controllers to already be installed in the cluster.
 
-1. **`service.enabled: true`** — the HTTPProxy routes to the chart's Service on
-   `service.port`, so a Service must exist.
+1. **`service.enabled: true`** — the default backend routes to the chart's
+   Service on `service.port`, so a Service must exist. This is only required when
+   using the default route/tcpproxy; if you provide custom `routes` or `tcpproxy`
+   that reference other Services, `service.enabled` is not needed.
 2. **`contour.httpProxy`** — set `enabled: true` and a `fqdn`. By default a
    single route sends `/` to the Service; override `routes` for custom routing.
    With `tls.enabled: true`, Contour terminates TLS using `tls.secretName`
