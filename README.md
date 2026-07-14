@@ -47,3 +47,10 @@ Using `<release>-tls` as the shared secret lets a single wildcard `Certificate`
 back multiple releases (e.g. production plus review apps) that reuse the same
 Secret. When a cert is issued out-of-band, leave `certificates` empty and just
 set `tls.secretName` on the HTTPProxy/Ingress.
+
+**Adopting an existing Certificate:** if a `Certificate` of the same name was
+previously created outside Helm (e.g. via `kubectl apply`), `helm upgrade` fails
+with an ownership error. Either delete it first (the TLS Secret survives, so
+there's no reissue) or annotate/label it (`meta.helm.sh/release-name`,
+`meta.helm.sh/release-namespace`, `app.kubernetes.io/managed-by=Helm`) so Helm
+adopts it in place.
