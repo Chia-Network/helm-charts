@@ -61,6 +61,7 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
   clusterRoleRules: []
+  roleRules: []
 
 # Specifies whether to recreate Pods on a redeploy if nothing else about the underlying Pods changed.
 # This is useful for Deployments that deploy an unchanging image tag like :latest,
