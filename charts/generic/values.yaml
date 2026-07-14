@@ -200,6 +200,62 @@ gatewayAPI:
     # See the HTTPRoute documentation for configuration details: https://gateway-api.sigs.k8s.io/api-types/httproute/
     # rules: {}
 
+# Contour-specific routing. Assumes the Contour ingress controller and its
+# projectcontour.io/v1 HTTPProxy CRD are already installed in the cluster.
+contour:
+  httpProxy:
+    enabled: false
+    annotations: {}
+    # The fully qualified domain name that this proxy answers for.
+    fqdn: chart-example.local
+    tls:
+      enabled: true
+      # Reuse a pre-existing TLS Secret. Defaults to "<release>-tls", which
+      # matches the Secret produced by certManager.certificate below (or the
+      # ingress TLS default) so the two features line up out of the box.
+      # secretName: ""
+      # Terminate TLS at Contour (default) or pass encrypted traffic straight
+      # through to the backend. When passthrough is true, secretName is ignored
+      # and routes must use tcpproxy instead of services.
+      passthrough: false
+      # minimumProtocolVersion: "1.2"
+    # Extra HTTPProxy "includes" (delegated routing), passed through as-is.
+    # includes: []
+    # By default a single route sends all traffic ("/") to the chart's Service
+    # on service.port. Provide routes here to override with your own, passed to
+    # the HTTPProxy as-is. See https://projectcontour.io/docs/main/config/api/
+    # routes: []
+
+# cert-manager integration. Assumes cert-manager and its cert-manager.io/v1
+# Certificate CRD are already installed, along with the referenced Issuer.
+certManager:
+  certificate:
+    enabled: false
+    annotations: {}
+    # Name of the Certificate resource. Defaults to the chart fullname.
+    # name: ""
+    # Secret where cert-manager stores the issued cert/key. Defaults to
+    # "<release>-tls" so it can be consumed directly by the ingress/HTTPProxy
+    # TLS defaults above.
+    # secretName: ""
+    # DNS names the certificate should be valid for (required when enabled).
+    dnsNames: []
+    #  - chart-example.local
+    #  - "*.chart-example.local"
+    # commonName: chart-example.local
+    # duration: 2160h
+    # renewBefore: 360h
+    # privateKey:
+    #   algorithm: ECDSA
+    #   size: 256
+    # usages:
+    #   - server auth
+    # The Issuer/ClusterIssuer that signs this certificate (name required).
+    issuerRef:
+      name: ""
+      kind: ClusterIssuer
+      group: cert-manager.io
+
 networkPolicy:
   enabled: false
   policyTypes: []

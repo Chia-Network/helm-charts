@@ -1,0 +1,33 @@
+# Test values to verify the Contour HTTPProxy and cert-manager Certificate
+# templates render correctly. The HTTPProxy backs the chart Service, and the
+# Certificate issues into the same "<release>-tls" secret the HTTPProxy reuses.
+mode: deployment
+replicaCount: 1
+image:
+  repository: nginx
+  tag: latest
+deployment:
+  containerPort: 80
+  containerPortName: http
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 80
+
+contour:
+  httpProxy:
+    enabled: true
+    fqdn: chart-example.local
+    tls:
+      enabled: true
+
+certManager:
+  certificate:
+    enabled: true
+    dnsNames:
+      - chart-example.local
+      - "*.chart-example.local"
+    issuerRef:
+      name: letsencrypt-cf
+      kind: ClusterIssuer
