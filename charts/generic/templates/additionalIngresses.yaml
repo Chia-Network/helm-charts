@@ -2,12 +2,21 @@
 {{- $fullName := include "generic.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- range $i, $ing := $.Values.additionalIngresses }}
-{{- if .hosts }}
+{{- $ruleType := (default "rules" $ing.ruleType) }}
+{{- if or $ing.hosts (eq $ruleType "defaultBackend") }}
 {{- $name := (default (printf "%s-%d" $fullName (add $i 1)) $ing.name) }}
 {{- $ingSvcName := (default $fullName $ing.serviceName) }}
 {{- $ingSvcPort := (default $svcPort $ing.servicePort) }}
-{{- $ruleType := (default "rules" $ing.ruleType) }}
 {{- $annotations := (default (dict) $ing.annotations) }}
+{{/* List entries don't inherit values.yaml defaults, so mirror the primary ingress opt-out defaults (true) while honoring an explicit false */}}
+{{- $tlsEnabled := true }}
+{{- if hasKey $ing "tlsEnabled" }}
+{{- $tlsEnabled = $ing.tlsEnabled }}
+{{- end }}
+{{- $tlsSecretEnabled := true }}
+{{- if hasKey $ing "tlsSecretEnabled" }}
+{{- $tlsSecretEnabled = $ing.tlsSecretEnabled }}
+{{- end }}
 {{- if and $ing.className (not (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion)) }}
 {{- if not (hasKey $annotations "kubernetes.io/ingress.class") }}
 {{- $_ := set $annotations "kubernetes.io/ingress.class" $ing.className }}
@@ -37,13 +46,13 @@ spec:
   {{- if and $ing.className (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ $ing.className }}
   {{- end }}
-  {{- if $ing.tlsEnabled }}
+  {{- if $tlsEnabled }}
   tls:
     - hosts:
       {{- range $ing.hosts }}
         - {{ .host | quote }}
       {{- end }}
-      {{- if $ing.tlsSecretEnabled }}
+      {{- if $tlsSecretEnabled }}
       secretName: "{{ $ing.tlsSecretName | default (printf "%s-tls" $name) }}"
       {{- end }}
   {{- end }}

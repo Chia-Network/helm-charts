@@ -493,10 +493,10 @@ jobs:
         run: |
           helm template test ./charts/generic -f ./charts/generic/test-values-additional-ingresses.yaml > /tmp/additional-ingress-output.yaml
           INGRESS_COUNT=$(grep -c "kind: Ingress" /tmp/additional-ingress-output.yaml || echo "0")
-          if [ "$INGRESS_COUNT" -eq 2 ]; then
-            echo "✓ Correctly created 2 additional Ingresses"
+          if [ "$INGRESS_COUNT" -eq 3 ]; then
+            echo "✓ Correctly created 3 additional Ingresses"
           else
-            echo "✗ Expected 2 Ingresses, found $INGRESS_COUNT"
+            echo "✗ Expected 3 Ingresses, found $INGRESS_COUNT"
             cat /tmp/additional-ingress-output.yaml
             exit 1
           fi
@@ -522,11 +522,21 @@ jobs:
             cat /tmp/additional-ingress-output.yaml
             exit 1
           fi
-          # TLS secret name from the named entry must be rendered (rendered quoted)
+          # TLS secret name must render even though tlsEnabled/tlsSecretEnabled are
+          # omitted (they must default to true, matching the primary ingress). Rendered quoted.
           if grep -q 'secretName: "test-ingress-primary-tls"' /tmp/additional-ingress-output.yaml; then
-            echo "✓ TLS secretName rendered correctly"
+            echo "✓ TLS secretName renders by default (tlsSecretEnabled defaults to true)"
           else
             echo "✗ TLS secretName not found"
+            cat /tmp/additional-ingress-output.yaml
+            exit 1
+          fi
+          # A defaultBackend-only entry must render an Ingress even without hosts
+          if grep -q "name: test-ingress-default-backend" /tmp/additional-ingress-output.yaml \
+            && grep -q "defaultBackend:" /tmp/additional-ingress-output.yaml; then
+            echo "✓ defaultBackend-only Ingress renders without hosts"
+          else
+            echo "✗ defaultBackend-only Ingress not rendered as expected"
             cat /tmp/additional-ingress-output.yaml
             exit 1
           fi

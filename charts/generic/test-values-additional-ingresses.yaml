@@ -22,9 +22,9 @@ additionalIngresses:
         paths:
           - path: /
             pathType: Prefix
-    tlsEnabled: true
+    # tlsEnabled/tlsSecretEnabled omitted on purpose: they must default to true
+    # (matching the primary ingress) so the secretName still renders.
     tlsSecretName: test-ingress-primary-tls
-    tlsSecretEnabled: true
     ruleType: rules
   # Unnamed entry: falls back to an indexed fullname. Routes to a different Service.
   - className: nginx
@@ -38,3 +38,8 @@ additionalIngresses:
             port: 9090
     tlsEnabled: false
     ruleType: rules
+  # defaultBackend-only catch-all: valid with no hosts, must still render an Ingress.
+  - name: test-ingress-default-backend
+    className: nginx
+    tlsEnabled: false
+    ruleType: defaultBackend
