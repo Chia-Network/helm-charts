@@ -522,8 +522,8 @@ jobs:
             cat /tmp/additional-ingress-output.yaml
             exit 1
           fi
-          # TLS secret name from the named entry must be rendered
-          if grep -q "secretName: test-ingress-primary-tls" /tmp/additional-ingress-output.yaml; then
+          # TLS secret name from the named entry must be rendered (rendered quoted)
+          if grep -q 'secretName: "test-ingress-primary-tls"' /tmp/additional-ingress-output.yaml; then
             echo "✓ TLS secretName rendered correctly"
           else
             echo "✗ TLS secretName not found"
