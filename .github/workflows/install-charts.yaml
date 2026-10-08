@@ -541,6 +541,38 @@ jobs:
             exit 1
           fi
 
+      - name: Test sidecar probes - verify optional probes render on sidecars
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-sidecar-probes.yaml > /tmp/sidecar-probes-output.yaml
+          awk '/- name: pgweb$/,/- name: no-probe$/' /tmp/sidecar-probes-output.yaml > /tmp/pgweb-container.yaml
+          if grep -q "livenessProbe:" /tmp/pgweb-container.yaml \
+            && grep -q "readinessProbe:" /tmp/pgweb-container.yaml \
+            && grep -q "startupProbe:" /tmp/pgweb-container.yaml \
+            && grep -q "initialDelaySeconds: 10" /tmp/pgweb-container.yaml \
+            && grep -q "failureThreshold: 30" /tmp/pgweb-container.yaml; then
+            echo "✓ pgweb sidecar liveness, readiness, and startup probes rendered"
+          else
+            echo "✗ Sidecar probes not rendered as expected"
+            cat /tmp/pgweb-container.yaml
+            exit 1
+          fi
+          awk '/- name: no-probe$/,/^      volumes:$/' /tmp/sidecar-probes-output.yaml > /tmp/noprobe-container.yaml
+          if grep -q "Probe:" /tmp/noprobe-container.yaml; then
+            echo "✗ Sidecar without probes rendered a probe field"
+            cat /tmp/noprobe-container.yaml
+            exit 1
+          else
+            echo "✓ Sidecar without probes rendered no probe fields"
+          fi
+          awk '/- name: generic$/,/- name: pgweb$/' /tmp/sidecar-probes-output.yaml > /tmp/main-container.yaml
+          if grep -q "Probe:" /tmp/main-container.yaml; then
+            echo "✗ Main container unexpectedly rendered a probe"
+            cat /tmp/main-container.yaml
+            exit 1
+          else
+            echo "✓ Main container probes unchanged when unset"
+          fi
+
       - name: Install generic-stateful chart
         uses: Chia-Network/actions/helm/deploy@main
         with:

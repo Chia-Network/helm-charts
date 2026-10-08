@@ -330,6 +330,18 @@ spec:
               subPath: {{ $file.filename }}
             {{- end }}
             {{- end }}
+          {{- with .livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
         {{- end }}
       volumes:
         {{- range .Values.sharedEmptyDirs }}
