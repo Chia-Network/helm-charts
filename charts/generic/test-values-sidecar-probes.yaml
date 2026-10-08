@@ -1,0 +1,41 @@
+# Test values to verify optional probes render on sidecars and are omitted when unset.
+mode: deployment
+replicaCount: 1
+image:
+  repository: nginx
+  tag: latest
+deployment:
+  containerPort: 80
+  containerPortName: http
+sidecars:
+  - name: pgweb
+    image:
+      repository: sosedoff/pgweb
+      pullPolicy: IfNotPresent
+      tag: latest
+    ports:
+      - name: http
+        containerPort: 8081
+        protocol: TCP
+    livenessProbe:
+      httpGet:
+        path: /
+        port: http
+      initialDelaySeconds: 10
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /
+        port: http
+    startupProbe:
+      httpGet:
+        path: /
+        port: http
+      failureThreshold: 30
+      periodSeconds: 10
+  # Sidecar with no probes: the template must not emit empty probe keys.
+  - name: no-probe
+    image:
+      repository: nginx
+      pullPolicy: IfNotPresent
+      tag: latest

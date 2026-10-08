@@ -45,6 +45,21 @@ sidecars: []
 #       protocol: TCP
 #    command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
 #    args: ['args', 'moreargs']
+#    livenessProbe: {}
+#      httpGet:
+#        path: /
+#        port: http
+#    readinessProbe: {}
+#      httpGet:
+#        path: /
+#        port: http
+#    startupProbe: {}
+#      httpGet:
+#        path: /
+#        port: http
+#      initialDelaySeconds: 0  # No delay before starting to check
+#      periodSeconds: 10       # Check every 10 seconds
+#      failureThreshold: 60    # Allows up to 60 consecutive failures (10 minutes)
 
 imagePullSecrets: []
 nameOverride: ""
