@@ -1,0 +1,17 @@
+# Test values to verify ServiceMonitor interval and sampleLimit are configurable
+mode: deployment
+replicaCount: 1
+image:
+  repository: nginx
+  tag: latest
+deployment:
+  containerPort: 80
+  containerPortName: http
+service:
+  enabled: true
+  port: 80
+serviceMonitor:
+  enabled: true
+  endpointPort: metrics
+  interval: 15s
+  sampleLimit: 5000

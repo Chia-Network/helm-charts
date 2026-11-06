@@ -321,6 +321,12 @@ serviceMonitor:
   # Changes the servicemonitor's spec.endpoints[0].port
   # Can be a port number or name
   endpointPort: metrics
+  # Scrape interval for spec.endpoints[0] (a Prometheus duration, e.g. 15s).
+  # Must be greater than or equal to the scrape timeout.
+  interval: 30s
+  # Optional spec.sampleLimit: a scrape returning more samples than this fails,
+  # which caps the damage a label-cardinality bug can do. Unset = no limit.
+  # sampleLimit: 5000
   ## The label to use to retrieve the job name from.
   ## jobLabel: "app.kubernetes.io/name"
   additionalLabels: {}
