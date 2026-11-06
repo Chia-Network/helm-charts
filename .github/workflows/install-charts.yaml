@@ -541,6 +541,42 @@ jobs:
             exit 1
           fi
 
+      - name: Test serviceMonitor - default interval stays 30s with no sampleLimit
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/values.yaml \
+            --set serviceMonitor.enabled=true > /tmp/servicemonitor-default.yaml
+          if grep -q 'interval: "30s"' /tmp/servicemonitor-default.yaml; then
+            echo "✓ Default scrape interval is 30s (unchanged for existing releases)"
+          else
+            echo "✗ Default scrape interval is not 30s"
+            cat /tmp/servicemonitor-default.yaml
+            exit 1
+          fi
+          if grep -q "sampleLimit:" /tmp/servicemonitor-default.yaml; then
+            echo "✗ sampleLimit rendered without being set"
+            exit 1
+          else
+            echo "✓ No sampleLimit by default"
+          fi
+
+      - name: Test serviceMonitor - interval and sampleLimit are configurable
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-servicemonitor.yaml > /tmp/servicemonitor-custom.yaml
+          if grep -q 'interval: "15s"' /tmp/servicemonitor-custom.yaml; then
+            echo "✓ Custom scrape interval rendered"
+          else
+            echo "✗ Custom scrape interval not rendered"
+            cat /tmp/servicemonitor-custom.yaml
+            exit 1
+          fi
+          if grep -q "sampleLimit: 5000" /tmp/servicemonitor-custom.yaml; then
+            echo "✓ sampleLimit rendered"
+          else
+            echo "✗ sampleLimit not rendered"
+            cat /tmp/servicemonitor-custom.yaml
+            exit 1
+          fi
+
       - name: Install generic-stateful chart
         uses: Chia-Network/actions/helm/deploy@main
         with:
