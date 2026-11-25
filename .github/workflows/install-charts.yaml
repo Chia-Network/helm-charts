@@ -541,6 +541,33 @@ jobs:
             exit 1
           fi
 
+      - name: Test sidecar lifecycle and terminationGracePeriodSeconds render
+        run: |
+          helm template test ./charts/generic -f ./charts/generic/test-values-sidecar-lifecycle.yaml -s templates/workload.yaml > /tmp/sidecar-lifecycle-output.yaml
+          if grep -q "terminationGracePeriodSeconds: 600" /tmp/sidecar-lifecycle-output.yaml; then
+            echo "✓ terminationGracePeriodSeconds renders when set"
+          else
+            echo "✗ terminationGracePeriodSeconds not rendered"
+            cat /tmp/sidecar-lifecycle-output.yaml
+            exit 1
+          fi
+          # Only the sidecar that sets lifecycle gets a preStop hook
+          if [ "$(grep -c "preStop:" /tmp/sidecar-lifecycle-output.yaml)" -eq 1 ] \
+            && grep -A12 "name: with-hook" /tmp/sidecar-lifecycle-output.yaml | grep -q "preStop:"; then
+            echo "✓ preStop renders on the sidecar that sets it, and only there"
+          else
+            echo "✗ Sidecar preStop hook not rendered as expected"
+            cat /tmp/sidecar-lifecycle-output.yaml
+            exit 1
+          fi
+          helm template test ./charts/generic -s templates/workload.yaml > /tmp/default-workload-output.yaml
+          if grep -q "terminationGracePeriodSeconds" /tmp/default-workload-output.yaml; then
+            echo "✗ terminationGracePeriodSeconds rendered without being set"
+            exit 1
+          else
+            echo "✓ terminationGracePeriodSeconds omitted by default"
+          fi
+
       - name: Install generic-stateful chart
         uses: Chia-Network/actions/helm/deploy@main
         with:
