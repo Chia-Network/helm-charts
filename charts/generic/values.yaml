@@ -45,6 +45,10 @@ sidecars: []
 #       protocol: TCP
 #    command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
 #    args: ['args', 'moreargs']
+#    lifecycle: {}
+#      preStop:
+#        exec:
+#          command: ['sh', '-c', 'sleep 10']
 
 imagePullSecrets: []
 nameOverride: ""
@@ -77,6 +81,10 @@ podSecurityContext: {}
 # When true, containers in the pod share a process namespace (needed for a sidecar
 # to signal processes in another container, e.g. SIGTERM on leader demotion).
 shareProcessNamespace: false
+
+# How long Kubernetes waits for the pod's containers to stop, preStop hooks included, before it
+# kills them. Unset leaves the Kubernetes default of 30 seconds.
+terminationGracePeriodSeconds: null
 
 securityContext: {}
   # capabilities:
