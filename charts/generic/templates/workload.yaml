@@ -46,6 +46,9 @@ spec:
       {{- if .Values.shareProcessNamespace }}
       shareProcessNamespace: true
       {{- end }}
+      {{- if not (kindIs "invalid" .Values.terminationGracePeriodSeconds) }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- end }}
       {{- with .Values.initContainers }}
       initContainers:
       {{- range $.Values.initContainers }}
@@ -259,6 +262,10 @@ spec:
           {{- end }}
           {{- with .ports }}
           ports:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .lifecycle }}
+          lifecycle:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           {{- with .environment }}
